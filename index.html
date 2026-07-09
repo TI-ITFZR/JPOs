@@ -10,7 +10,955 @@
   :root{
     --bg:#f4f6f8;
     --panel:#ffffff;
+    --panel-2:#eef2f6;<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>FZR Division — JPO Safety Circulars Dashboard</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@700;900&family=Noto+Sans+Devanagari:wght@400;500;600;700&family=Public+Sans:wght@400;500;600;700&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#f4f6f8;
+    --panel:#ffffff;
     --panel-2:#eef2f6;
+    --line:#d5dde6;
+    --line-strong:#b8c4d1;
+    --ink:#172230;
+    --muted:#526173;
+    --muted-2:#7b8794;
+    --clear:#1f7a4d;      /* signal green - clear/current */
+    --caution:#9a6b12;    /* signal amber - caution/last year */
+    --stop:#a33a35;       /* signal red - stop/attention */
+    --steel:#1f4e79;      /* formal railway navy accent */
+    --steel-soft: rgba(31,78,121,0.10);
+    --header:#0f2742;
+    --gold:#b68a2c;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);font-family:'Public Sans','Noto Sans Devanagari',Arial,sans-serif;}
+  ::selection{background:var(--steel);color:#fff;}
+
+  .rail{
+    height:4px;
+    background:linear-gradient(90deg, var(--header) 0 70%, var(--gold) 70% 100%);
+    border-bottom:1px solid var(--line-strong);
+  }
+
+  header{
+    padding:0;
+    background:linear-gradient(180deg, #ffffff, #f8fbfe);
+    border-bottom:1px solid var(--line-strong);
+  }
+  .masthead{
+    max-width:1320px;
+    margin:0 auto;
+    padding:28px clamp(16px,4vw,48px) 24px;
+    display:grid;
+    grid-template-columns:minmax(0, 1fr) minmax(360px, 470px);
+    gap:28px;
+    align-items:center;
+  }
+  .brand-block{
+    min-width:0;
+    position:relative;
+    padding-left:18px;
+  }
+  .brand-block::before{
+    content:"";
+    position:absolute;
+    left:0;
+    top:4px;
+    bottom:4px;
+    width:4px;
+    background:linear-gradient(180deg, var(--header), var(--gold));
+    border-radius:2px;
+  }
+  .command-panel{
+    background:var(--panel);
+    border:1px solid var(--line);
+    border-top:3px solid var(--steel);
+    border-radius:8px;
+    padding:16px;
+    box-shadow:0 8px 24px rgba(23,34,48,0.08);
+  }
+  .panel-label{
+    font-family:'Roboto Mono',monospace;
+    font-size:10.5px;
+    letter-spacing:0.12em;
+    text-transform:uppercase;
+    color:var(--muted-2);
+    margin-bottom:9px;
+  }
+  .eyebrow{
+    font-family:'Roboto Mono',monospace;
+    font-size:11px;
+    letter-spacing:0.12em;
+    text-transform:uppercase;
+    color:var(--steel);
+    display:flex;
+    align-items:center;
+    gap:8px;
+    margin-bottom:10px;
+  }
+  .eyebrow .dot{width:7px;height:7px;border-radius:50%;background:var(--clear);box-shadow:0 0 0 3px rgba(31,122,77,0.14);}
+  h1{
+    font-family:'Oswald', sans-serif;
+    font-weight:900;
+    font-size:clamp(27px,3vw,40px);
+    margin:0 0 6px;
+    letter-spacing:0;
+    line-height:1.1;
+    color:var(--header);
+  }
+  header p.sub{margin:0 0 20px;color:var(--muted);font-size:15px;line-height:1.45;max-width:720px;}
+  .header-facts{
+    display:flex;
+    gap:10px;
+    flex-wrap:wrap;
+    margin-top:18px;
+  }
+  .fact-chip{
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+    border:1px solid var(--line);
+    border-radius:999px;
+    background:#fff;
+    color:var(--muted);
+    padding:5px 10px;
+    font-size:12px;
+    font-weight:600;
+  }
+  .fact-chip::before{
+    content:"";
+    width:6px;
+    height:6px;
+    border-radius:50%;
+    background:var(--gold);
+  }
+
+  .searchbar{
+    display:flex;align-items:center;gap:10px;
+    background:var(--panel);
+    border:1px solid var(--line);
+    border-radius:6px;
+    padding:10px 13px;
+    width:100%;
+    max-width:none;
+    box-shadow:0 1px 2px rgba(23,34,48,0.05);
+  }
+  .searchbar svg{flex:none;opacity:0.6;}
+  .searchbar input{
+    flex:1;background:none;border:none;outline:none;color:var(--ink);
+    font-family:'Public Sans','Noto Sans Devanagari',Arial,sans-serif;font-size:15px;
+  }
+  .searchbar input::placeholder{color:var(--muted-2);}
+  .searchbar .clear-btn{
+    display:none;cursor:pointer;color:var(--muted);font-family:'Roboto Mono',monospace;font-size:11px;
+    border:1px solid var(--line);border-radius:4px;padding:3px 7px;background:var(--panel-2);
+  }
+  .searchbar .clear-btn:hover{color:var(--ink);border-color:var(--steel);}
+  .link-note{
+    margin:9px 0 0;
+    font-size:11.5px;
+    line-height:1.45;
+    color:var(--muted-2);
+    font-family:'Roboto Mono',monospace;
+  }
+  #syncBar{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:10px;
+    margin-top:12px;
+    font-family:'Roboto Mono',monospace;
+    font-size:11.5px;
+    color:var(--muted);
+    flex-wrap:wrap;
+  }
+  #refreshBtn{
+    background:var(--panel-2);
+    border:1px solid var(--line);
+    color:var(--ink);
+    border-radius:6px;
+    padding:6px 11px;
+    font-family:inherit;
+    font-size:11px;
+    cursor:pointer;
+  }
+  .panel-actions{
+    display:flex;
+    gap:8px;
+    align-items:center;
+    flex-wrap:wrap;
+  }
+  @media (max-width:920px){
+    .masthead{grid-template-columns:1fr;align-items:start;}
+    .command-panel{max-width:640px;}
+  }
+  @media (max-width:560px){
+    .masthead{padding:22px 16px;}
+    .brand-block{padding-left:14px;}
+    .header-facts{gap:7px;}
+    .fact-chip{font-size:11px;padding:4px 8px;}
+    #syncBar{align-items:flex-start;}
+  }
+
+  main{padding:24px clamp(16px,4vw,48px) 60px;max-width:1320px;margin:0 auto;}
+
+  /* stat cards */
+  .stats{
+    display:grid;
+    grid-template-columns:repeat(auto-fit, minmax(150px,1fr));
+    gap:12px;
+    margin:22px 0 30px;
+  }
+  .stat-card{
+    background:var(--panel);
+    border:1px solid var(--line);
+    border-radius:6px;
+    padding:16px 16px 14px;
+    position:relative;
+    overflow:hidden;
+    box-shadow:0 1px 3px rgba(23,34,48,0.06);
+  }
+  .stat-card::before{
+    content:"";position:absolute;top:0;left:0;bottom:0;width:3px;background:var(--signal, var(--steel));
+  }
+  .stat-card .num{font-family:'Public Sans',Arial,sans-serif;font-size:31px;font-weight:900;line-height:1;color:var(--header);}
+  .stat-card .lbl{margin-top:6px;color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:0.05em;font-weight:600;}
+
+  /* tabs */
+  .tabs{
+    display:flex;gap:4px;flex-wrap:wrap;
+    border-bottom:1px solid var(--line);
+    margin-bottom:22px;
+  }
+  .tab-btn{
+    font-family:'Public Sans','Noto Sans Devanagari',Arial,sans-serif;
+    font-size:14px;
+    font-weight:600;
+    letter-spacing:0;
+    color:var(--muted);
+    background:none;border:none;
+    padding:10px 14px 12px;
+    cursor:pointer;
+    border-bottom:2px solid transparent;
+    display:flex;align-items:center;gap:7px;
+    transition:color .15s;
+  }
+  .tab-btn:hover{color:var(--ink);}
+  .tab-btn.active{color:var(--header);border-bottom-color:var(--gold);}
+  .tab-btn .count{
+    background:var(--panel-2);color:var(--muted);
+    border-radius:12px;padding:1px 7px;font-size:11px;font-family:'Roboto Mono',monospace;font-weight:500;
+  }
+  .tab-btn.active .count{background:var(--steel-soft);color:var(--steel);}
+
+  .panel{display:none;}
+  .panel.active{display:block;animation:fade .25s ease;}
+  @keyframes fade{from{opacity:0;transform:translateY(4px);}to{opacity:1;transform:none;}}
+
+  h2.section-title{
+    font-family:'Public Sans','Noto Sans Devanagari',Arial,sans-serif;
+    font-size:16px;font-weight:700;
+    text-transform:uppercase;letter-spacing:0.04em;
+    color:var(--header);
+    margin:28px 0 10px;
+    padding-left:12px;
+    border-left:3px solid var(--steel);
+    display:flex;align-items:center;gap:10px;
+  }
+  h2.section-title:first-child{margin-top:0;}
+  h2.section-title .n{color:var(--muted);font-weight:400;font-size:12px;letter-spacing:0;}
+
+  table{width:100%;border-collapse:collapse;font-size:14px;margin-bottom:8px;background:var(--panel);border:1px solid var(--line);}
+  thead th{
+    text-align:left;color:var(--header);
+    font-family:'Public Sans','Noto Sans Devanagari',Arial,sans-serif;
+    font-size:12px;text-transform:uppercase;letter-spacing:0.04em;font-weight:700;
+    padding:9px 10px;border-bottom:1px solid var(--line-strong);
+    background:#eef3f8;
+    white-space:nowrap;
+  }
+  thead th.sortable{cursor:pointer;user-select:none;}
+  thead th.sortable:hover{color:var(--ink);}
+  thead th.sortable .arrow{opacity:0.5;margin-left:3px;}
+  tbody td{
+    padding:9px 10px;border-bottom:1px solid #e5ebf1;
+    vertical-align:top;color:var(--ink);
+  }
+  tbody tr:nth-child(even) td{background:#fbfcfe;}
+  tbody tr:hover td{background:#eef5fb;}
+  tbody tr.hide{display:none;}
+  td.mono, td[data-mono="1"]{font-family:'Roboto Mono',monospace;font-size:12px;color:var(--muted);}
+  td.tag{
+    white-space:nowrap;
+  }
+  .badge{
+    display:inline-block;padding:2px 8px;border-radius:12px;font-size:11px;
+    font-family:'Roboto Mono',monospace;
+    font-weight:500;
+  }
+  .badge.nrhq{background:rgba(31,78,121,0.10);color:var(--steel);}
+  .badge.rb{background:rgba(154,107,18,0.12);color:var(--caution);}
+  .badge.div{background:rgba(31,122,77,0.12);color:var(--clear);}
+  .badge.other{background:var(--panel-2);color:var(--muted);}
+
+  .signal-dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:8px;flex:none;}
+  .signal-dot.clear{background:var(--clear);box-shadow:0 0 0 3px rgba(31,122,77,0.14);}
+  .signal-dot.caution{background:var(--caution);box-shadow:0 0 0 3px rgba(154,107,18,0.14);}
+  .signal-dot.stop{background:var(--muted-2);box-shadow:0 0 0 3px rgba(123,135,148,0.14);}
+
+  .empty-msg{color:var(--muted);font-size:13px;padding:18px 4px;font-style:italic;}
+
+  /* overview layout */
+  .ov-grid{display:grid;grid-template-columns:1.3fr 1fr;gap:22px;margin-top:6px;}
+  @media (max-width:860px){.ov-grid{grid-template-columns:1fr;}}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:18px 18px 14px;box-shadow:0 1px 3px rgba(23,34,48,0.06);}
+  .card h3{
+    font-family:'Public Sans','Noto Sans Devanagari',Arial,sans-serif;font-size:13px;text-transform:uppercase;letter-spacing:0.05em;
+    margin:0 0 14px;color:var(--header);font-weight:700;
+  }
+  .activity-row{
+    display:flex;align-items:flex-start;gap:0;
+    padding:9px 0;border-bottom:1px solid #e5ebf1;
+  }
+  .activity-row:last-child{border-bottom:none;}
+  .activity-text{flex:1;font-size:13px;line-height:1.4;}
+  .activity-meta{color:var(--muted);font-size:11.5px;margin-top:2px;font-family:'Roboto Mono',monospace;}
+  .activity-date{color:var(--muted);font-size:11.5px;font-family:'Roboto Mono',monospace;white-space:nowrap;padding-left:10px;}
+
+  .bar-row{display:flex;align-items:center;gap:10px;margin-bottom:10px;}
+  .bar-label{width:56px;flex:none;font-family:'Roboto Mono',monospace;font-size:12px;color:var(--muted);}
+  .bar-track{flex:1;background:var(--panel-2);border-radius:3px;height:16px;overflow:hidden;}
+  .bar-fill{height:100%;border-radius:3px;background:var(--steel);}
+  .bar-val{width:30px;flex:none;text-align:right;font-family:'Roboto Mono',monospace;font-size:12px;color:var(--ink);}
+
+  .legend{display:flex;gap:16px;flex-wrap:wrap;margin-top:12px;font-size:11.5px;color:var(--muted);}
+  .legend span{display:flex;align-items:center;gap:6px;}
+
+  footer{
+    padding:20px clamp(16px,4vw,48px) 40px;color:var(--muted-2);font-size:12px;
+    font-family:'Roboto Mono',monospace;
+  }
+  a.link-cell{color:var(--steel);text-decoration:none;border-bottom:1px dotted var(--steel);font-weight:500;}
+  a.link-cell:hover{color:var(--steel);border-bottom-style:solid;}
+  a.link-cell .ext-ico{color:var(--steel);font-size:11px;}
+  #syncStatusText{
+    position:absolute;
+    width:1px;
+    height:1px;
+    padding:0;
+    margin:-1px;
+    overflow:hidden;
+    clip:rect(0,0,0,0);
+    white-space:nowrap;
+    border:0;
+  }
+  #refreshBtn:hover{border-color:var(--steel);color:var(--steel);}
+  #refreshBtn:disabled{opacity:0.5;cursor:default;}
+  .visitor-pill{
+    display:inline-flex;
+    align-items:center;
+    gap:7px;
+    background:#fff;
+    border:1px solid var(--line);
+    border-radius:6px;
+    padding:4px 10px;
+    color:var(--muted);
+    box-shadow:0 1px 2px rgba(23,34,48,0.05);
+  }
+  .visitor-pill strong{
+    color:var(--header);
+    font-weight:700;
+  }
+  .live-badge{
+    display:inline-flex;align-items:center;gap:4px;
+    font-size:9.5px;letter-spacing:0.04em;
+    color:var(--clear);background:rgba(31,122,77,0.10);
+    border-radius:10px;padding:1px 6px;margin-left:6px;
+    font-family:'Roboto Mono',monospace;
+  }
+  .live-badge .pulse{width:5px;height:5px;border-radius:50%;background:var(--clear);}
+  .live-badge.fail{color:var(--caution);background:rgba(154,107,18,0.12);}
+  .live-badge.fail .pulse{background:var(--caution);}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="masthead">
+    <div class="brand-block">
+      <div class="eyebrow"><span class="dot"></span> NORTHERN RAILWAY ↗ FIROZPUR (FZR) DIVISION</div>
+      <h1>JPO Safety Circulars Dashboard</h1>
+      <p class="sub">A consolidated, searchable index of Joint Procedure Orders, operating safety circulars &amp; bulletins, safety drives, rule books, station working records and important safety letters currently in force.</p>
+      <div class="header-facts" aria-label="Register highlights">
+        <span class="fact-chip">Live data</span>
+        <span class="fact-chip">PDF links enabled</span>
+        <span class="fact-chip">Searchable records</span>
+      </div>
+    </div>
+
+    <div class="command-panel" aria-label="Register controls">
+      <div class="panel-label">Search Bar</div>
+      <div class="searchbar">
+        <svg width="10" height="10" viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="7" stroke="#8a95a5" stroke-width="2"/><path d="M21 21L16.65 16.65" stroke="#8a95a5" stroke-width="2" stroke-linecap="round"/></svg>
+        <input id="globalSearch" type="text" placeholder="Search JPO, circular, drive, station or letter..." autocomplete="off">
+        <span class="clear-btn" id="clearBtn">CLEAR X</span>
+      </div>
+
+      <div id="syncBar">
+          <span id="syncStatusText">Loading live data?</span>
+        <div class="panel-actions">
+          <button id="refreshBtn">↻ Refresh now</button>
+          <span class="visitor-pill">
+👥 Visitors
+<strong id="visitorCount">0</strong>
+</span>
+
+<span class="visitor-pill">
+🕒 Updated
+<strong id="lastUpdate">--</strong>
+</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<div class="rail"></div>
+
+<main>
+  <div class="stats" id="statCards"></div>
+
+  <div class="tabs" id="tabBar"></div>
+
+  <div id="panels"></div>
+</main>
+
+<footer>Generated from “Important JPO, Safety Circular and Drive” register · figures reflect entries currently listed in the source file.</footer>
+
+<script>
+const DATA = {"sheets": {"JPO": [{"section": null, "headers": ["Sr.No.", "Details", "Date", "Letter No", "Issued By"], "items": [{"cells": ["1", "JPO for unloading of balast DMT.", "10.05.2023", "No. 348-W/Utilization of wagons/Pt.15", "NRHQ"], "links": [null, "https://drive.google.com/file/d/1XdPt_jn8DIlqyLWNh61M8b0vhSvlDYUU/view?usp=drive_link", null, null, null], "date": "2023-05-10"}, {"cells": ["", "Revised JPO for Ballast DMT Unloading.", "04.11.2025", "No. 348-W/Utilization of wagons/Pt.16", "NRHQ"], "links": [null, "https://drive.google.com/file/d/1h3wY4iMMBSgLT8AULr5SsF3LtIrtNGSL/view?usp=drive_link", null, null, null], "date": "2025-11-04"}, {"cells": ["2", "JPO to start a stable freight train.", "08.11.2024", "No. 45-RS/9/Train operation(C No 12964)", "NRHQ"], "links": [null, "https://drive.google.com/file/d/1Z--yaRscqEyceFSIf28P8yD07pAq73Jt/view?usp=drive_link", null, null, null], "date": "2024-11-08"}, {"cells": ["", "(स्थिर मालगाड़ी शुरू करने के लिए संयुक्त प्रक्रिया आदेश) हिंदी अनुवाद", "", "", ""], "links": [null, "https://drive.google.com/file/d/159pJfRnpWlMLMCAto2sBR1LTCcHIxahn/view?usp=drive_link", null, null, null]}, {"cells": ["3", "Guidelines to prevent uncoupling cases of freight trains.", "04.09.2024", "No. 2012/M(N)/951 (E- 3325701)", "RB"], "links": [null, "https://drive.google.com/file/d/1i_th9FEQl2NkIVmhJ4JC92rBBLw9rf70/view?usp=drive_link", null, null, null], "date": "2024-09-04"}, {"cells": ["4", "JPO on Speed of train during Non-Interlocked Working.", "01.07.2022", "No. 403-T/JPO/Optg/NI/Speed-30/331/1", "NRHQ"], "links": [null, "https://drive.google.com/file/d/1pHBo9PG0eEDORfCoDdtWYpabK5InaidO/view?usp=drive_link", null, null, null], "date": "2022-07-01"}, {"cells": ["5", "JPO on Duty Hours of Freight Crews.", "04.05.2023", "No.49-T/41/TGS/Part-II", "NRHQ"], "links": [null, "https://drive.google.com/file/d/1s8qLzHtSYx7jtOnUaKKfF0-cFIrlzVzI/view?usp=drive_link", null, null, null], "date": "2023-05-04"}, {"cells": ["6", "JPO for point and crossing.", "02.01.2023", "No. 580-W/0/19/Pt-XI", "Div."], "links": [null, "https://drive.google.com/file/d/1qPZDMqU05fDaFos_WmCWGNZVE-9PMpUU/view?usp=drive_link", null, null, null], "date": "2023-01-02"}, {"cells": ["7", "JPO for HOG Operation.", "23.02.2021", "No.3-Elect./TL/RCF/HOG Pt.-I", "NRHQ"], "links": [null, "https://drive.google.com/file/d/1CO9yZOzNce-UTxsWa6ZV6sXFIG3O6Mac/view?usp=drive_link", null, null, null], "date": "2021-02-23"}, {"cells": ["8", "JPO for availability of medical boxes at railway stations and all passenger carrying trains over Northern Railway.", "01.02.2024", "No. 1-Med/FAB/Pt-XI", "NRHQ"], "links": [null, "https://drive.google.com/file/d/1dyUuslyq81VjPFhF_VzERiD56Tt-3eJE/view?usp=drive_link", null, null, null], "date": "2024-02-01"}, {"cells": ["9", "Permissible restricted speed for LHB coaches with broken primary spring (only in case of enroute failures).", "28.08.2022", "No. 2017/M(C)/138/2Pt1", "RB"], "links": [null, "https://drive.google.com/file/d/1WRhIIoiECUp-fF5RStjIZyvb7bI63ldm/view?usp=drive_link", null, null, null], "date": "2022-08-28"}, {"cells": ["10", "JPO for Deep Screening of Point and Crossing by BCM on NR.", "05.05.2022", "No. 219-W/61/TMC/P&C/JPO", "NRHQ"], "links": [null, "https://drive.google.com/file/d/1d9bGPhMKIDLLXq-eNXt9z3JiEMqzcxLr/view?usp=drive_link", null, null, null], "date": "2022-05-05"}, {"cells": ["11", "JPO for Precautions to be taken while working at level crossing on 25KV electrified section", "", "", "DIv."], "links": [null, "https://drive.google.com/file/d/1CnfOiAYFShFlQhbtCaYgDihAW3b_Yt8R/view?usp=drive_link", null, null, null]}, {"cells": ["12", "JPO on action to be taken to prevent fire in trains.", "13.12.2021", "No. 802-M/6/40/Part-II/MC-I", "NRHQ"], "links": [null, "https://drive.google.com/file/d/1p10aR6wX5PIiI8b3hmjwlDjXwYJ8lncj/view?usp=drive_link", null, null, null], "date": "2021-12-13"}, {"cells": ["13", "JPO to avoid cases of pilferage and unsafe interference in Brake Van of Goods train by unauthorized persons", "11.02.2021", "No. CPTM/Misc/2021", "NRHQ"], "links": [null, "https://drive.google.com/file/d/1JYfG9K34_d8H62bUNSDZJ5dnCtSp0mr9/view?usp=drive_link", null, null, null], "date": "2021-02-11"}, {"cells": ["14", "JPO for route learning of SSE/JE/Track Machine & assistance by LP for movement of track Machines.", "22.09.2020", "No. 219-W/61/TMC/Route Learning", "NRHQ"], "links": [null, "https://drive.google.com/file/d/1r7UBJW-lNB9CJRSGmmls1bYaYEFU5NeW/view?usp=drive_link", null, null, null], "date": "2020-09-22"}, {"cells": ["15", "JPO on FLAT tyre /Metal deposit", "14.09.2024", "No. 1-W/0/Safety/Flat Tyre/Pt.IV", "NRHQ"], "links": [null, "https://drive.google.com/file/d/1C4x6_-eAIGpZgBEc2ynW46n_wW2CYod6/view?usp=drive_link", null, null, null], "date": "2024-09-14"}, {"cells": ["16", "JPO for prevention of open doors of wagons hitting railway structures.", "15.07.2020", "No. 36-RD/JPO/Open doors/Wagon", "NRHQ"], "links": [null, "https://drive.google.com/file/d/1HBf1EvRzVZLdUe-r6Wwtyqh_Z2-ngYQG/view?usp=drive_link", null, null, null], "date": "2020-07-15"}, {"cells": ["17", "JPO on Funtioning of Turn Table at ASR.", "06.11.2019", "No. 424-T/Safety Policy/Pt-V", "DIv."], "links": [null, "https://drive.google.com/file/d/1KSG_pX2bKYWYPrz3z_v3ehcBRRnSmBGd/view?usp=drive_link", null, null, null], "date": "2019-11-06"}, {"cells": ["18", "JPO to start the freight trains having problem of AFI increasing or BP pressure not build Up within time.", "30.12.2019", "No. 424-T/Safety Policy/Pt-V", "DIv."], "links": [null, "https://drive.google.com/file/d/1eqkS8GYLhzuLZpTZjVTU_scOh1XOQ6mC/view?usp=drive_link", null, null, null], "date": "2019-12-30"}, {"cells": ["19", "JPO for reporting of signal failure.", "26.06.2019", "No. 240-Sig/9/Pt.III", "DIv."], "links": [null, "https://drive.google.com/file/d/15baZOC7aI3dYGYg-r1liJQM6KzL6lylE/view?usp=drive_link", null, null, null], "date": "2019-06-26"}, {"cells": ["20", "JPO for standard shunting guidelines", "05.07.2018", "No. 403-T/Misc/Rule/Optg/JPO/33", "NRHQ"], "links": [null, "https://drive.google.com/file/d/1Os6Lng5VsY8FkQ5kjUWDIGQzzedizVL-/view?usp=drive_link", null, null, null], "date": "2018-07-05"}, {"cells": ["21", "JPO to be followed for loading of containers from Goods sheds/sidings/Pvt freight terminals", "01.08.2023", "No. 49-T/59/TGS/Policy", "NRHQ"], "links": [null, "https://drive.google.com/file/d/1leALRHmbbM8IPbTcGDcoRrWJoiaxlG3Q/view?usp=drive_link", null, null, null], "date": "2023-08-01"}, {"cells": ["22", "JPO-Disconnection/Reconnection protocols for S&T Gears.", "27.07.2023", "No. 403-T/JPO/131", "NRHQ"], "links": [null, "https://drive.google.com/file/d/1lCVEqzrEYTMvS9_086taaL7nQS-hWzS3/view?usp=drive_link", null, null, null], "date": "2023-07-27"}, {"cells": ["23", "Revised Joint procedure for Shutting Down of locomotives on line.", "13.11.2017", "No. 63-FA/0/Procedure(101/1)", "NRHQ"], "links": [null, "https://drive.google.com/file/d/1VLigy9q_gUjzbLyGjbTEJA_KRoH7_51l/view?usp=drive_link", null, null, null], "date": "2017-11-13"}, {"cells": ["24", "गाड़ियों के समयपालन मे सुधार लाने के अनुक्रम मे सयुक्त कार्यविधि आदेश (JPO)", "04.07.2017", "No. 403-टी/191/एस. आर . / पार्ट -1/लूज़", "NRHQ"], "links": [null, "https://drive.google.com/file/d/1ERNsualg1Xu3UFQJOp6IqZVLRgquJj-7/view?usp=drive_link", null, null, null], "date": "2017-07-04"}, {"cells": ["25", "JPO for Machine packing of turnouts and other Locations", "16.04.2013", "No. 219-W/61/TMC/Pt-9/Unimat", "NRHQ"], "links": [null, "https://drive.google.com/file/d/1FSDP0P_je8lfL9TLhkgyUYmraZQsWWI3/view?usp=drive_link", null, null, null], "date": "2013-04-16"}, {"cells": ["26", "JPO for use of CUG/Personal Mobile Telephones by Loco pilots/ Assistant Loco Pilots/MotorMen and Guards.", "27/12/2012", "No. 2010/Tele/2(1)/1/Pt.", "RB"], "links": [null, "https://drive.google.com/file/d/1GJB3ghsG79txIJv7ijANc6IudgVoePcB/view?usp=drive_link", null, null, null], "date": "2012-12-27"}, {"cells": ["27", "JPO regarding opening of relay rooms at Railway stations.", "21.04.2009", "No. 256-Sig/0/SG/Progress", "NRHQ"], "links": [null, "https://drive.google.com/file/d/14pBW7Xt-ynivcRlhWCgNkI0ABZxxfkaE/view?usp=drive_link", null, null, null], "date": "2009-04-21"}, {"cells": ["28", "JPO regarding emergency relay room key.", "21.09.2021", "No.256-Sig/0/Fire/FDSS", "NRHQ"], "links": [null, "https://drive.google.com/file/d/1d1Tjm8Arj3zzNOzqEukCBfxN8LgPwWyI/view?usp=drive_link", null, null, null], "date": "2021-09-21"}, {"cells": ["29", "Operating Safety Instructions.", "08.06.2023", "No. 403-T/Optg/Safety Circular/14/Pt-II/224", "NRHQ"], "links": [null, "https://drive.google.com/file/d/1W8Kzfe6sQjAc1svIzs8IvuUB9h0xO94k/view?usp=drive_link", null, null, null], "date": "2023-06-08"}, {"cells": ["30", "Provision of retro-reflective Number plate on OHE Mast.", "07.05.2012", "No. 2001/Elect (G)/170/1 Pt.", "RB"], "links": [null, "https://drive.google.com/file/d/1HivbImk5rZH1kWzyAzxSUEunUMVJu4aK/view?usp=drive_link", null, null, null], "date": "2012-05-07"}, {"cells": ["31", "Reception of train on an obstructed line on Calling-ON Signal.", "13.09.2012", "No. 2012/Safety-I/3/7", "RB"], "links": [null, "https://drive.google.com/file/d/1U4v4qGpzNfg6_HYgJkijoTMsvA1ODRtm/view?usp=drive_link", null, null, null], "date": "2012-09-13"}, {"cells": ["32", "Calling Out of signals by Loco Crew.", "16.06.2016", "No. 81-T/93/1/OP/Safety", "NRHQ"], "links": [null, "https://drive.google.com/file/d/1wTPfIt9On9T9AmLBUnTb1xUAYTBchZTa/view?usp=drive_link", null, null, null], "date": "2016-06-16"}, {"cells": ["33", "Clarification of instructions issued in operating safety circular no. 403-T/safetycircular/Optg/Rule/Part1dated:05/09/12.", "12.05.2017", "No. 403-T/Safety Circular/14/Pt.II", "NRHQ"], "links": [null, "https://drive.google.com/file/d/1I-VpcinMzb0avZ-_oEItk6bD0Rc5J0MY/view?usp=drive_link", null, null, null], "date": "2017-05-12"}, {"cells": ["34", "Policy on Drunkeness on duty.", "01.06.2018", "No. 2009/Safety (DM)/6/12 Committee", "RB"], "links": [null, "https://drive.google.com/file/d/1VFejfn7hO-TPuM1hi8Vw-DuhlQcenYfe/view?usp=drive_link", null, null, null], "date": "2018-06-01"}, {"cells": ["35", "Operating safety circular No. 01/2020 Regarding Power & Traffic Block.", "09.03.2020", "No. 403-T/Optg/Safety Circular/14/Pt-II", "NRHQ"], "links": [null, "https://drive.google.com/file/d/1ZXQbj13sZyA2CXiFere022DYClcyU4G4/view?usp=drive_link", null, null, null], "date": "2020-03-09"}, {"cells": ["36", "Notification of Indian Railways (Open Line) General Rules 4.10-Increasing speed of trains to 30 KMPH during NI working.", "18.03.2020", "No. 2020/Safety(A&R)/19/07", "RB"], "links": [null, "https://drive.google.com/file/d/1DBE0NyqmAjP_fzS4M4YIdRvNnWn2bfZY/view?usp=drive_link", null, null, null], "date": "2020-03-18"}, {"cells": ["37", "Prevention of Enroute Detentions.(VESDA)", "13.08.2021", "No. 802-M/6/1/LHB/MC-1", "NRHQ"], "links": [null, "https://drive.google.com/file/d/1y0mdQ_4BuGuyl5STK37Gj_m3_k4zOYGH/view?usp=drive_link", null, null, null], "date": "2021-08-13"}, {"cells": ["38", "Instructions regarding Guard Driver (GDR) check and Door working.", "23.06.2020", "No. 2018/M(N)/951/34 Pt.", "RB"], "links": [null, "https://drive.google.com/file/d/1PzybQM0VXQYhayfUYVTwDg_CqVhIEBrQ/view?usp=drive_link", null, null, null], "date": "2020-06-23"}, {"cells": ["39", "Precautions before speed trial of CRS during opening of lines.", "15.02.2021", "No. NR-HQ0SFTY(ACCD)/2/2021", "NRHQ"], "links": [null, "https://drive.google.com/file/d/10gshF7xtLrKrkekpo5WMlfQYui1v6yh7/view?usp=drive_link", null, null, null], "date": "2021-02-15"}, {"cells": ["40", "Precautions in delivery of caution orders and updation in COA.", "12.10.2021", "No. 403-T/19/Pt. VIII/Optg/Rule/3", "NRHQ"], "links": [null, "https://drive.google.com/file/d/19PBTj3EI1SfRpWjCglLNPT1Ato8Sl5F9/view?usp=drive_link", null, null, null], "date": "2021-10-12"}, {"cells": ["41", "JPO for securing and release of vehicles/load/train/Loco in stations/Yard or in Block section.", "24.01.2025", "No. 2024/TT-IV/12/30", "RB"], "links": [null, "https://drive.google.com/file/d/1TohnRmGoZXZ2K9O2s3EZF-mBmtMQ6lAX/view?usp=drive_link", null, null, null], "date": "2025-01-24"}, {"cells": ["42", "Winter and Foggy weather precautions 2024-25.", "04.11.2024", "No. 81-T/Misc/Safety/2024", "NRHQ"], "links": [null, "https://drive.google.com/file/d/1vKnY9pItZpTFhKJO7MdvbfLTqBVl46pL/view?usp=drive_link", null, null, null], "date": "2024-11-04"}, {"cells": ["43", "Indian Railway accident protocol", "21.05.2021", "No. 2021/Safety (A&R)/26/5", "RB"], "links": [null, "https://drive.google.com/file/d/1HYHZaoUPfKuo0m3Cn4-6Km1zjzEEsXEn/view?usp=drive_link", null, null, null], "date": "2021-05-21"}, {"cells": ["44", "JPO for undertaking earth work / digging work/ trecning work in the vinicity of Signalling, Telecom  and Electrical cables/ other assests - preventing and post cable/ assest damage measure.", "15.11.2023", "No. 256-sig/0/cable cable /Pt-I (e-5502)", "NRHQ"], "links": [null, "https://drive.google.com/file/d/1aIYPRNNxe94VTdGlCdEYMMZrBPD0rOGJ/view?usp=drive_link", null, null, null], "date": "2023-11-15"}, {"cells": ["45", "JPO for testing for Testing of sliding boom barrier.", "05.01.2023", "No- 256-Sig/0/Slinding Boom", "DIv."], "links": [null, "https://drive.google.com/file/d/1fUyus_naFC2YEQWB9SMFBnF1YbthGuW2/view?usp=drive_link", null, null, null], "date": "2023-01-05"}, {"cells": ["46", "JPO for replacement of insulation of RDSO Joints.", "08.06.2023", "No- 256-Sig/0/Glued Joint", "DIv."], "links": [null, "https://drive.google.com/file/d/11UdTy1Nld22yYV_2_p13aLL7g69LfYoe/view?usp=drive_link", null, null, null], "date": "2023-06-08"}, {"cells": ["47", "JPO for smooth operation of trains with LHB rake due to sudden drop of BP pressure", "26.05.2022", "No. 147-Elect/TRS/6/2/Pt-32", "NRHQ"], "links": [null, "https://drive.google.com/file/d/10qtNQOOKk8odr4XEB0MoBabPjyrSDOOr/view?usp=drive_link", null, null, null], "date": "2022-05-26"}, {"cells": ["48", "JPO for procurement maintenance/ repair, condemnation and issue of 5-watt walkie- Talkie VHF sets to crew.", "06.02.2025", "No. NR-HQ0SNT(TELE)/120/2020 (e-31572)", "NRHQ"], "links": [null, "https://drive.google.com/file/d/1c5wKzGR0IAJg_ub4sR0ugcGl5DMSkf3y/view?usp=drive_link", null, null, null], "date": "2025-02-06"}, {"cells": ["49", "Action after Cattle run over (CRO) cases to prevent unsafe working and detention.", "28.07.2022", "No-230-Elect/TRS/202/Operational Circulars", "NRHQ"], "links": [null, "https://drive.google.com/file/d/18Um2O3AEsfMIJZpRTGQJit3jmm4sMXgA/view?usp=drive_link", null, null, null], "date": "2022-07-28"}, {"cells": ["50", "Joint intructions for controlling running of freight trains with invalid BPC.", "09.06.2023", "No. 2023/TT-1/27/07/Invalid BPC", "RB"], "links": [null, "https://drive.google.com/file/d/1tPsrHFk7qkiLkAM827xYACCr5G8GbzmO/view?usp=drive_link", null, null, null], "date": "2023-06-09"}, {"cells": ["51", "Standardisation of Brake Van Equipment for Coaching Trains.", "08.01.2024", "No. 98/Safety(A&R)/19/15", "RB"], "links": [null, "https://drive.google.com/file/d/1fd6r1x0_Z4bO0_UoakB7Ogr0ba7suWmz/view?usp=drive_link", null, null, null], "date": "2024-01-08"}, {"cells": ["52", "JPO on weather Cyclon", "01.12.2018", "", "NRHQ"], "links": [null, "https://drive.google.com/file/d/1DtCOJBMsx7xrIIHFi8l8alxaNRwMxgGn/view?usp=drive_link", null, null, null], "date": "2018-12-01"}, {"cells": ["53", "Model Joint Procedure Order for processing of grant of Accident Free Service Award (AFSA) to eligible retired Railway Staff.", "03.04.2023", "No.- 752-E/38/Accident Free Service/Operating/ EIB", "NRHQ"], "links": [null, "https://drive.google.com/file/d/1377EECs81YPxTZ26K-6ty1q7GhHgI5RG/view?usp=drive_link", null, null, null], "date": "2023-04-03"}, {"cells": ["54", "Joint note regarding PQRS depo at RDS.", "26.11.2025", "Nil", "DIv."], "links": [null, "https://drive.google.com/file/d/1yGkKJKl-wSOYDvSVPLIY3Plp1WOaMXXI/view?usp=drive_link", null, null, null], "date": "2025-11-26"}, {"cells": ["55", "Model JPO for shunting operation in yard of FZR division.", "12.12.2025", "Nil", "DIv."], "links": [null, "https://drive.google.com/file/d/1hCur1JkSYtN_y8JAL2pXxm9-5xhLdlHy/view?usp=drive_link", null, null, null], "date": "2025-12-12"}, {"cells": ["56", "Speed restriction for NMG type rakes over 1 in 8.5 turnouts.", "23.02.2026", "No. 2025/Elect(TRS)/113/1/Misc", "RB"], "links": [null, "https://drive.google.com/file/d/1KShLkUZcTgoENkKCP_uLYxuiHcIs9A4w/view?usp=drive_link", null, null, null], "date": "2026-02-23"}, {"cells": ["57", "Proforma of Emergency Route Release.", "17.07.2023", "No. 403.T/R.R./Optg./2023", "NRHQ"], "links": [null, "https://drive.google.com/file/d/1_ZwuLh2dEiLG9duKF9pELLU_elBCrula/view?usp=drive_link", null, null, null], "date": "2023-07-17"}]}], "Circular and Safety Bulletin": [{"section": "DIVISIONAL OPERATING SAFETY CIRCULAR 2026", "headers": ["Sr.no", "DIVISIONAL OPERATING SAFETY CIRCULAR 2026", "Date", "Letter No"], "items": [{"cells": ["1", "पावर ब्लॉक और ट्रैफिक ब्लॉक के समय बरती जाने वाली सावधानिया। (परिचालन संरक्षा परिपत्र संख्या 01/2026)", "09.03.2026", "क्रम सं.424-T/संरक्षा-परिपत्र/2026"], "links": [null, "https://drive.google.com/file/d/1_HZ3jndkFbz8WEDjwf7U6sygtZHLi5b2/view?usp=drive_link", null, null], "date": "2026-03-09"}, {"cells": ["2", "गलत मार्ग निर्धारण/गलत मार्ग सिग्नल डाउन करने की घटना।(परिचालन संरक्षा परिपत्र संख्या 02/2026)", "17.03.2026", "No.-424-T/Safety Circular/2026"], "links": [null, "https://drive.google.com/file/d/1rG9NV7TJX9ivdVZ3WenZvG3lb2jcFad_/view?usp=drive_link", null, null], "date": "2026-03-17"}, {"cells": ["3", "Signal replacement cases due to progarame changed by Controller.", "25.03.2026", "No.-424-T/Safety Circular/2026"], "links": [null, "https://drive.google.com/file/d/1KezRLB_61p40uCsiMwPyoWiwtDPS1dws/view?usp=drive_link", null, null], "date": "2026-03-25"}, {"cells": ["4", "DN 13308 को Caution Order (T-409) जारी न किया जाने के सम्बद्ध मे ।", "30.04.2026", "No.-424-T/Safety Circular/2026"], "links": [null, "https://drive.google.com/file/d/1po2hwHPF4hNY8b4FG_IdGM0oWexkYWcQ/view?usp=drive_link", null, null], "date": "2026-04-30"}]}, {"section": "DIVISIONAL OPERATING SAFETY CIRCULAR 2025", "headers": ["Sr.No.", "DIVISIONAL OPERATING SAFETY CIRCULAR 2025", "Date", "Letter No"], "items": [{"cells": ["1", "Derailment/Incident due to short cut adopted by staff.(Operating Safety circular no. 01/2025)", "22.01.2025", "No.-424-T/Safety Circular/2024"], "links": [null, "https://drive.google.com/file/d/1P5Z1qUjUHsL2V0ELN08_tvjz7hPXFcnh/view?usp=drive_link", null, null], "date": "2025-01-22"}, {"cells": ["2", "Counselling of Shunting Staff Regarding Shunt Signal Overshoot Incident.", "04.02.2025", "No. 424-T/Safety Circular/2024"], "links": [null, "https://drive.google.com/file/d/1SIzChObPNivbYI51Ro_C7QmuYx4IkNFy/view?usp=drive_link", null, null], "date": "2025-02-04"}, {"cells": ["3", "Precautions in delivery of caution orders and updation in COA.", "27.03.2025", "No. 424-T/Safety Circular/2024"], "links": [null, "https://drive.google.com/file/d/1C1VzkmZdKoWTXAu70181rMIu7L6X98ZP/view?usp=drive_link", null, null], "date": "2025-03-27"}, {"cells": ["4", "Instructions regarding operation of Emergency route release at Panel/VDU.", "25.06.2025", "No. 424-T/Safety Circular/2024"], "links": [null, "https://drive.google.com/file/d/1dQDYtISFp37TyDlJ3jRWN6fFhWI62LHR/view?usp=drive_link", null, null], "date": "2025-06-25"}, {"cells": ["5", "Precautions to be taken to avoid sudden signal raise", "04.09.2025", "No. 424-T/Safety Circular/2024"], "links": [null, "https://drive.google.com/file/d/1H6r6Cox86MfvOOdEn6WC5IdvGkmNUvtN/view?usp=drive_link", null, null], "date": "2025-09-04"}, {"cells": ["6", "ट्रेन परिचालन के दौरान हाथ सिग्नल का महत्व और उपयोग।", "03.10.2025", "No. 424-T/Safety Circular/2025"], "links": [null, "https://drive.google.com/file/d/1Edj4fvlNgaJeKsQmN7X_sjAOBicUYfnV/view?usp=drive_link", null, null], "date": "2025-10-03"}, {"cells": ["7", "Train Operation during Foggy & inclement weather- Precautions.", "08.10.2025", "No.-424-T/Fog Signal/Optg./FZR/2023"], "links": [null, "https://drive.google.com/file/d/1R9Hv5XzPQh1H2YqRkZhiscsma_Kojqqo/view?usp=drive_link", null, null], "date": "2025-10-08"}]}, {"section": "HQ OPERATING SAFETY CIRCULAR", "headers": ["Sr.No.", "HQ OPERATING SAFETY CIRCULAR", "Date", "Letter No"], "items": [{"cells": ["1", "Accident/ Derailment over NR on account of shunting errors. (Operating safety circular no. 01/2024).", "27.02.2024", "No.-403-T/Optg/Safety Circular/Rule/14/Part-II"], "links": [null, "https://drive.google.com/file/d/1rKUzjBx_QMR7cNEKp9njdTxRcwvMZKjN/view?usp=drive_link", null, null], "date": "2024-02-27"}, {"cells": ["2", "Securing of vehicles/ Loads at Stations. (Operating safety circular no. 01/2024).", "27.02.2024", "No.-403-T/Optg/Safety Circular/14/Pt-II/224"], "links": [null, "https://drive.google.com/file/d/1KoI5BTlE5Bu4YifAf9oPr8on3LuXUvnu/view?usp=drive_link", null, null], "date": "2024-02-27"}, {"cells": ["3", "Train Operations during Foggy & Inclement weather precautions. (HQ Safety Drive 01/2025)", "27.10.2025", "No.-403-T/Fog/Instructions/Circular/Optg/14/Pt-III/224"], "links": [null, "https://drive.google.com/file/d/1-NejJobCx28lvxMisCLdmudqQQtMMBmK/view?usp=drive_link", null, null], "date": "2025-10-27"}, {"cells": ["4", "शंटिंग  के समय  बरती जाने वाली सावधानियां। (HQ 02-2025).", "07.11.2025", "पत्र सा. 403-T/143/Pt-V/शंटिंग/Optg/43"], "links": [null, "https://drive.google.com/file/d/1OsFst8HrD3DxD3JBTz7nv03t-Sc3TUlY/view?usp=drive_link", null, null], "date": "2025-11-07"}]}, {"section": "Divisional Operating Safety Bulletin", "headers": ["Sr. No.", "Divisional Operating Safety Bulletin", "विषय"], "items": [{"cells": ["1", "Safety Bulletin on various incident occured over FZR Division. (English Version)", "फिरोजपुर मंडल में विभिन्न घटनाओं पर संरक्षा बुलेटिन (Hindi Version)"], "links": [null, "https://drive.google.com/file/d/1Pd8fnCUQuoPGQn5eu4hO7aybWEuIKYFM/view?usp=drive_link", "https://drive.google.com/file/d/11nUKSrvBDdqpRp2dIY-4ImYTdX_EaQsU/view?usp=drive_link"]}, {"cells": ["2", "Safety Bulletin March-2025 (English Version)", "संरक्षा बुलेटिन मार्च-2025  (Hindi Version)"], "links": [null, "https://drive.google.com/file/d/1Lrdahs8UeKzBQG1YDNTa9R6t-45ErEjo/view?usp=drive_link", "https://drive.google.com/file/d/1hYpGSG7qbWlhp5lTcvphpfbp5Adk1oXP/view?usp=drive_link"]}, {"cells": ["3", "Safety Booklet May-2025", ""], "links": [null, "https://drive.google.com/file/d/121aKDe7UsYRb2Uy1691KOHBZvBIV_0cj/view?usp=drive_link", null]}, {"cells": ["4", "Pictorial safety booklet June-25.", ""], "links": [null, "https://drive.google.com/file/d/1GRvS4BBIdgqUYr6GC79sZR4u4FUq_Sm4/view?usp=drive_link", null]}, {"cells": ["5", "Safety E-Booklet Sept-2025", ""], "links": [null, "https://drive.google.com/file/d/185x2sCYcn8G2YHoSS4TpJ-pfiMhaa2Ht/view?usp=drive_link", null]}]}], "DIV and HQ Safety Drive": [{"section": "DIVISIONAL OPERATING SAFETY DRIVE 2025", "headers": ["Sr.No.", "DIVISIONAL OPERATING SAFETY DRIVE 2025", "Drive No.", "From", "To"], "items": [{"cells": ["1", "Ambush check of shunting practice and deficecny of hand operated point.", "Div. Optg. SD No. 01", "10.01.2025", "24.01.2025"], "links": [null, "https://drive.google.com/file/d/1Nx4JoFAJ6WMZ3cG8IFfO-jaqSz_k87r5/view?usp=drive_link", null, null, null], "date": "2025-01-10"}, {"cells": ["2", "07 days special Intesive safety drive from 06.02.2025 to 12.02.2025 for major yard.", "Div. Optg. SD No. 02", "06.02.2025", "12.02.2025"], "links": [null, "https://drive.google.com/file/d/1rgN_Epiqgb8CjKg0YmOf4yPNee-OrBuI/view?usp=drive_link", null, null, null], "date": "2025-02-06"}, {"cells": ["3", "Ambush check of shunting practice and deficiency of hand operated point from 06.03.2025 to 12.03.2025.", "Div. Optg. SD No. 03", "06.03.2025", "12.03.2025"], "links": [null, "https://drive.google.com/file/d/16NYg65nA-cgsXH5218DwNbUctFFcGGZv/view?usp=drive_link", null, null, null], "date": "2025-03-06"}, {"cells": ["4", "One week Special safety drive to check level crossing gates", "Div. Optg. SD No. 04", "20.03.2025", "26.03.2025"], "links": [null, "https://drive.google.com/file/d/1NrM_Y2lJLLzHj-fH1zxjIc8OHoIsTFEW/view?usp=sharing", null, null, null], "date": "2025-03-20"}, {"cells": ["5", "One week Safety Drive regarding Preparation, delivery and record keeping of caution order.", "Div. Optg. SD No. 05", "28.03.2025", "03.04.2025"], "links": [null, "https://drive.google.com/file/d/1PGR19-f6Ovtytq8ouN-FYUYC2zPP9WfR/view?usp=drive_link", null, null, null], "date": "2025-03-28"}, {"cells": ["6", "Special divisional operating safety drive for a period of 15 days regarding VDU/Panel emergency operations and related safety procedures.", "Div. Optg. SD No. 06", "04.04.2025", "18.04.2025"], "links": [null, "https://drive.google.com/file/d/1iGSoflieypoG8WiRc-tlSlkK9AcZCuiW/view?usp=drive_link", null, null, null], "date": "2025-04-04"}, {"cells": ["7", "15 days safety drive to check deficencies and mismatching in SWR, SWRD with actual layout.", "Div. Optg. SD No. 07", "09.04.2025", "23.04.2025"], "links": [null, "https://drive.google.com/file/d/1jZJIi0eUDcav7Lmabq1MUp-zPgrl1si9/view?usp=drive_link", null, null, null], "date": "2025-04-09"}, {"cells": ["8", "15 days Safety drive to check emergency panel/VDU operation and shunting movement.", "Div. Optg. SD No. 08", "18.04.2025", "02.05.2025"], "links": [null, "https://drive.google.com/file/d/1XIpykfqvEVklObdC9XDxK8SQup30omIi/view?usp=drive_link", null, null, null], "date": "2025-04-18"}, {"cells": ["9", "21 days joint shunting safety drive checking by TIs and CLIs", "Div. Optg. SD No. 09", "17.05.2025", "06.06.2025"], "links": [null, "https://drive.google.com/file/d/13aY7AWThZx4SiYe-11-qVlgl8cua0SfK/view?usp=drive_link", null, null, null], "date": "2025-05-17"}, {"cells": ["", "Corrigendum of Div. Optg. SD No. 09.", "", "", ""], "links": [null, "https://drive.google.com/file/d/1r9sfZM-HNvh_S8CXmx1RfGyDmihPPaXR/view?usp=drive_link", null, null, null]}, {"cells": ["10", "03 daysjoint Footplate by TIs and CLIs for checking Speed of trains at single yellow signal.", "Div. Optg. SD No. 10", "21.05.2025", "23.05.2025"], "links": [null, "https://drive.google.com/file/d/1ew1a9d-pg-OEfPPcKihYi4UnLebtOPUf/view?usp=drive_link", null, null, null], "date": "2025-05-21"}, {"cells": ["11", "Operating Safety Drive w.r.t to check deficiencies noticed by SAG level safety audit in LKO division.", "Div. Optg. SD No. 11", "25.06.2025", "04.07.2025"], "links": [null, "https://drive.google.com/file/d/1JREja-zb5cdZ7o7mUsGpx-RROudim1wM/view?usp=drive_link", null, null, null], "date": "2025-06-25"}, {"cells": ["12", "Operating Safety Drive No. 12/2025 - checking proper procedure of closing of train operation at Level crossing gate.", "Div. Optg. SD No. 12", "10.07.2025", "19.07.2025"], "links": [null, "https://drive.google.com/file/d/1cjMu8kVPZbIdhnibcURK0xqBvarn_aHm/view?usp=drive_link", null, null, null], "date": "2025-07-10"}, {"cells": ["13", "Operating safety drive no. 13/2025 for Sectional TIs and Divisional TIs inspection schedule", "Div. Optg. SD No. 13", "24.09.2025", "03.10.2025"], "links": [null, "https://drive.google.com/file/d/1SQ_ofexHNmsPv6f5ZIS4CiZNOIzn2qt2/view?usp=drive_link", null, null, null], "date": "2025-09-24"}, {"cells": ["14", "10 days Cross beat safety inspection of stations over FZR Division", "Div. Optg. SD No. 14", "30.10.2025", "08.11.2025"], "links": [null, "https://drive.google.com/file/d/1V6ksHvVDaEUeDjnq2BeKgBemnj_qic53/view?usp=drive_link", null, null, null], "date": "2025-10-30"}]}, {"section": "DIVISIONAL OPERATING SAFETY DRIVE 2026", "headers": ["Sr.No.", "DIVISIONAL OPERATING SAFETY DRIVE 2026", "Drive No.", "From", "To"], "items": [{"cells": ["1", "Detailed Safety Inspection of Scheduled Stations by Sectional TIs", "Div. Optg. SD No. 01/2026", "18.02.2026", "26.02.2026"], "links": [null, "https://drive.google.com/file/d/1tu1oclLknOFPsfgChB8gZilyPFmhwBWe/view?usp=drive_link", null, null, null], "date": "2026-02-18"}, {"cells": ["2", "One month long safety drive for inspection of Siding and Goods shed over FZR Division.", "Div. Optg. SD No. 02/2026", "02.04.2026", "30.04.2026"], "links": [null, "https://drive.google.com/file/d/1OmdNmOpiDouGKff3RUjp9wWY-vjx73qz/view?usp=drive_link", null, null, null], "date": "2026-04-02"}, {"cells": ["3", "NIL", "Div.Optg.SD No. 03/2026", "01.05.2026", "14.05.2026"], "links": [null, null, "http://div.optg.sd/", null, null], "date": "2026-05-01"}]}, {"section": "DIVISIONAL  SAFETY DRIVE 2025", "headers": ["Sr.No.", "DIVISIONAL  SAFETY DRIVE 2025", "Drive No.", "From", "To"], "items": [{"cells": ["1", "Special safety drive to check CTRT level crossing gates.", "Div. Safety Drive no. 01", "09.07.2025", "22.07.2025"], "links": [null, "https://drive.google.com/file/d/1hikd5-45zoJ3xbXPKxTs8mKWygjRyipt/view?usp=drive_link", null, null, null], "date": "2025-07-09"}, {"cells": ["2", "Fire Incidence of in rear Power car no. 251258/C  LWLRRM of train no. 05580 at SSB Station on 11.09.2026 at SSB Station on 11.09.2026.", "Div. Safety Drive no. 02", "25.02.2026", "11.06.2026"], "links": [null, "https://drive.google.com/file/d/1EtCo9_Pc1XD_nvPiY2CzzWtF0Bii6HBd/view?usp=drive_link", null, null, null], "date": "2026-02-25"}, {"cells": ["3", "21 days special safety drive for audit, improvement of road surface at Level crosiing with TVU greater than 20000.", "Div. Safety Drive no. 03", "18.03.2026", "09.04.2026"], "links": [null, "https://drive.google.com/file/d/1uOBHUi-aEprZIyC8owAg4RZnOj7Scl7f/view?usp=drive_link", null, null, null], "date": "2026-03-18"}]}, {"section": "HQ SAFETY SAFETY DRIVE 2026", "headers": ["Sr.No.", "HQ SAFETY SAFETY DRIVE 2026", "Drive No.", "From", "To"], "items": [{"cells": ["1", "Week long safety drive", "HQ SD No. 01", "01.01.2026", "07.01.2026"], "links": [null, "https://drive.google.com/file/d/17UtMWrn1-Dj8J9ZgfU42GGy4M7P3sBHL/view?usp=drive_link", null, null, null], "date": "2026-01-01"}, {"cells": ["2", "Special drive to counsel SM/ASM & ESM regarding Train working", "HQ SD No. 02", "02.01.2026", "14.01.2026"], "links": [null, "https://drive.google.com/file/d/1S3n6ncmNU8lXQvAMJdmzm-rRxSDEuYOm/view?usp=drive_link", null, null, null], "date": "2026-01-02"}, {"cells": ["3", "Special safety drive for a week", "HQ SD No. 03", "15.01.2026", "22.01.2026"], "links": [null, "https://drive.google.com/file/d/17awgRS8Jgp-FfLNmXj-6ZE3rrNws1euR/view?usp=drive_link", null, null, null], "date": "2026-01-15"}, {"cells": ["4", "Intra Railway audit inspection of lobbies & running room", "HQ SD no. 04", "16.02.2026", "16.03.2026"], "links": [null, "https://drive.google.com/file/d/1Ztrker11adzhAKY8tuNRXWUrJSO7g6mv/view?usp=drive_link", null, null, null], "date": "2026-02-16"}, {"cells": ["5", "Week long safety drive", "HQ SD no. 06", "02.02.2026", "08.02.2026"], "links": [null, "https://drive.google.com/file/d/1dWZN7KFA2bhTgHRxB_2y4g_elv1y19sA/view?usp=drive_link", null, null, null], "date": "2026-02-02"}, {"cells": ["6", "Week long safety drive for various items of Elect., Mech., S&T, Optg. , Engg. Department.", "HQ SD no. 07", "16.02.2026", "23.02.2026"], "links": [null, "https://drive.google.com/file/d/1_h6t7lWRpVsZpK7P0W2H0D5SDc2Be6zY/view?usp=drive_link", null, null, null], "date": "2026-02-16"}, {"cells": ["7", "15 days safety drive regarding “Fire safety in Passenger Carrying trains", "HQ SD no. 08", "23.02.2026", "09.03.2026"], "links": [null, "https://drive.google.com/file/d/1m5Oskcp_JwdyFOZBtIxHqaHDfYv93ui_/view?usp=drive_link", null, null, null], "date": "2026-02-23"}, {"cells": ["8", "Week long safety drive for various items of Elect. Mech., S&T, Optg., Engg department.", "HQ SD no. 09", "02.03.2026", "08.03.2026"], "links": [null, "https://drive.google.com/file/d/1d7E1lJYoPbwrrjII_OlAm-jjy1J7ZHO9/view?usp=drive_link", null, null, null], "date": "2026-03-02"}, {"cells": ["9", "15 days safety drive regarding “ Securing of vehicle/loads/trains/locomotive at stations, yards and in block section together with operation in Ghat Sections", "HQ SD no. 10", "12.03.2026", "26.03.2026"], "links": [null, "https://drive.google.com/file/d/1s9koTPHZvUcNOelC4jssO4OIhQVle0P4/view?usp=sharing", null, null, null], "date": "2026-03-12"}, {"cells": ["10", "15 Days Safety Drive for Ensuring Correct Reception/ Dispatch of Trains and Adherence to line Clear procedure.", "HQ SD NO. 11", "14.04.2026", "28.04.2026"], "links": [null, "https://drive.google.com/file/d/1IQw7HYq5uNoCe0cd__uIrrjdxeIl8HQZ/view?usp=drive_link", null, null, null], "date": "2026-04-14"}, {"cells": ["11", "15 Days Safety for adherence to prescribed procedures for reseting Axle Counter as per Block Working manual (BWM) and IRSEM.", "HQ SD No. 12", "15.04.2026", "29.04.2026"], "links": [null, "https://drive.google.com/file/d/1IQw7HYq5uNoCe0cd__uIrrjdxeIl8HQZ/view?usp=sharing", null, null, null], "date": "2026-04-15"}]}, {"section": "HQ Operating/Rule Safety  Drive 2025", "headers": ["Sr.No.", "HQ Operating/Rule Safety  Drive 2025", "Drive No.", "From", "To"], "items": [{"cells": ["1", "Safety inspection of Level Crossing Gates Over NR.", "HQ SD No. 01", "30.07.2025", "13.08.2025"], "links": [null, "https://drive.google.com/file/d/1B1lRX2vQ5ZGKk7LT9mSF1Br6tTnk-WcK/view?usp=drive_link", null, null, null], "date": "2025-07-30"}, {"cells": ["2", "15 Days Safety Drive to check Signal Visibility Over NR.", "HQ SD No. 02", "18.08.2025", "01.09.2025"], "links": [null, "https://drive.google.com/file/d/1rycNE4GZlRNLefXUQZW7sPAApZ97mlL-/view?usp=drive_link", null, null, null], "date": "2025-08-18"}]}, {"section": "HQ Operating/Rule Safety  Drive 2026", "headers": ["Sr.No.", "HQ Operating/Rule Safety  Drive 2026", "Drive No.", "From", "To"], "items": [{"cells": ["1", "Inspection of big stations & Major yards by Divisional Operating officers & TIs.", "Safety drive no. 01", "01.01.2026", "31.01.2026"], "links": [null, "https://drive.google.com/file/d/1v9d7ZWg5FdOfWjZGnCnGu58BLvJ07XW8/view?usp=drive_link", null, null, null], "date": "2026-01-01"}, {"cells": ["2", "Week long safety drive to check TWRD and SWRD over NR.", "Safety drive no. 02", "02.02.2026", "08.02.2026"], "links": [null, "https://drive.google.com/file/d/1UIJKefE8yozfnL_YKXNA0InSIOaEJHkh/view?usp=drive_link", null, null, null], "date": "2026-02-02"}, {"cells": ["3", "One month long safety drive for inspection of big stations & Major yards over NR.", "Safety drive no. 03", "06.02.2026", "05.03.2026"], "links": [null, "https://drive.google.com/file/d/1Z_gwPr7_jwHDIdr2NFmwAJEqN5XJrtwB/view?usp=drive_link", null, null, null], "date": "2026-02-06"}]}], "Rule Book and WTT": [{"section": "NR G&SR", "headers": ["Sr.No.", "NR G&SR"], "items": [{"cells": ["1", "Indian Railways General & Subsiddiary Rule with appendices (Reprinted edition 2025)"], "links": [null, "https://drive.google.com/file/d/109WPJUuuYWlDqVwqJz4BN-9FlE_IAoke/view?usp=drive_link"]}, {"cells": ["2", "Amenment Slip 01 of G&SR on 25.06.2025 (English Version)"], "links": [null, "https://drive.google.com/file/d/1rfVC32MK_2M-TjI7P4DRbdsnztTeQbBI/view?usp=drive_link"]}, {"cells": ["3", "Amendment Slip 01 of G&SR (Hindi version)"], "links": [null, "https://drive.google.com/file/d/1yREVGHH6vZLfptPQJqDb6VjBPQw_7Uyi/view?usp=drive_link"]}, {"cells": ["4", "Amenment Slip 02 of G&SR on 16.10.2025 (English Version & Hindi version)"], "links": [null, "https://drive.google.com/file/d/1KjxTEG0FjxTb0RovfRrNZmf0Hytcc_tJ/view?usp=drive_link"]}, {"cells": ["5", "Amenment Slip 03 of G&SR on 21.11.2025 (English Version & Hindi version)"], "links": [null, "https://drive.google.com/file/d/1o8VtNNnQL_dBoE91qq7NYrI5lu3kZEwo/view?usp=drive_link"]}, {"cells": ["6", "Amendment Slip 03 of G&SR (Para no. 02 may be kept in abeyance ) 15.12.2025."], "links": [null, "https://drive.google.com/file/d/137c51QA6_14noRxaUjPWO_IJsD8q88E9/view?usp=drive_link"]}, {"cells": ["7", "Revised Amendment slip no. 03 of G&SR on 28.01.2026 (English & Hindin version)"], "links": [null, "https://drive.google.com/file/d/1IJQNtClmHYg2IJZWyMdtzDw-JEndbTke/view?usp=drive_link"]}, {"cells": ["8", "Amendment slip 04 of G&SR on 18.02.2026 (English & Hindi version)"], "links": [null, "https://drive.google.com/file/d/1RhmSDEfZpkOhCZUFmPP266H3B6ICWW5P/view?usp=drive_link"]}]}, {"section": "NR BWM", "headers": ["Sr.No.", "NR BWM"], "items": [{"cells": ["1", "BLOCK WORKING MANUAL (UPTO 05 Amendment slip)."], "links": [null, "https://drive.google.com/file/d/1Jwk7bg8HFNLes2V3WpmgIlWqVl-xnwul/view?usp=drive_link"]}, {"cells": ["2", "Amendment slip no. 06 of NR BWM regarding correction in T-806 (Shunting order)."], "links": [null, "https://drive.google.com/file/d/1eEYpNmFLMSvwApdNN1KIqNZal7svjf_p/view?usp=drive_link"]}]}, {"section": "OPERATING MANUAL", "headers": ["Sr.No.", "OPERATING MANUAL"], "items": [{"cells": ["1", "OPERATING MANUAL INDIAN RAILWAY"], "links": [null, "https://drive.google.com/file/d/1aI7pOhc7PVWEldPCzemTn7OA4PPl0BRr/view?usp=drive_link"]}, {"cells": ["2", "NR-OPERATING MANUAL"], "links": [null, "https://drive.google.com/file/d/1Y--pRgG7nuGmn9fdy0Q2odbDWwJaN5Re/view?usp=drive_link"]}, {"cells": ["3", "O.M. Amendment slip no. 01."], "links": [null, "https://drive.google.com/file/d/1if9WuKvegY-0SdqLjb2dTJthNdDyelBv/view?usp=drive_link"]}, {"cells": ["4", "O.M. Amendment slip no. 02 and 03."], "links": [null, "https://drive.google.com/file/d/1PKiVcFeSREQjKB4_QVyNYDlm84nYkCgx/view?usp=drive_link"]}]}, {"section": "NR ACCIDENT MANUAL", "headers": ["Sr.No.", "NR ACCIDENT MANUAL"], "items": [{"cells": ["1", "Accident Mannual (Upto 52 Amendment Slip)"], "links": [null, "https://drive.google.com/file/d/15vv7T8ZES-D4ApRWUlHnwm8eMscqg9wM/view?usp=drive_link"]}, {"cells": ["2", "Accident Mannual (from 53 to 56 Amendment Slip)"], "links": [null, "https://drive.google.com/file/d/1vCFEwdR5jn6BHvqYdBngiLJXlfvb4M3h/view?usp=drive_link"]}, {"cells": ["3", "Accident Mannual (57 Amendment Slip)"], "links": [null, "https://drive.google.com/file/d/1u7RGz5sUnmOkr7bftiGgWUzSpztnHcn-/view?usp=drive_link"]}, {"cells": ["4", "Accident Mannual (58 Amendment Slip)"], "links": [null, "https://drive.google.com/file/d/1ZiXCzRhfI2uALWz_FxGQmwzK9V2Hv8M_/view?usp=drive_link"]}, {"cells": ["5", "Accident Mannual (59 Amendment Slip)"], "links": [null, "https://drive.google.com/file/d/1hvTwvxnmWixYHNEhPw28UDqX5UJB_AV9/view?usp=drive_link"]}]}, {"section": "Working Time Table FZR", "headers": ["Sr.No.", "Working Time Table FZR"], "items": [{"cells": ["1", "FIROZPUR Division WTT-2026  w.e.f. 01.01.2026"], "links": [null, "https://drive.google.com/file/d/1M0-Kwvwc2Jjyh5LtbveM2Gf6kRd-7wpS/view?usp=drive_link"]}, {"cells": ["2", "JAT DIVISION WTT-2026 w.e.f. 01.01.2026."], "links": [null, "https://drive.google.com/file/d/1Fvwn6dmdUJ6w_wiFr8Veenq1mt_7ADPf/view?usp=drive_link"]}]}], "SWRD and SWR over FZR Division": [{"section": "SWRD and SWR OF FZR DIVISION", "headers": ["Sr.No", "Station", "SWRD (English)", "SWR (English)", "Additional Added Pages (English)", "SWR (Hindi)", "Additional Added Pages (Hindi)"], "items": [{"cells": ["1", "AJL", "AJL", "English", "---", "हिन्दी", "---"], "links": [null, null, "https://drive.google.com/file/d/1-qDBTQZkpg-wW0t246k1Hx-ay9zEY3uv/view?usp=drive_link", "https://docs.google.com/document/d/1lRhsdAMYOJ7ChC7UiC1RecBUKFhsyth8/edit?usp=drive_link&ouid=106988498767218567675&rtpof=true&sd=true", null, "https://docs.google.com/document/d/1nWbq-hg51BxGx7ZNT9Eu7MvDXNrUodOo/edit?usp=sharing&ouid=110681307565615179523&rtpof=true&sd=true", null]}, {"cells": ["2", "ASR", "ASR", "English", "Block working", "हिन्दी", "ASR SLIP 1  HASSDAC.doc"], "links": [null, null, "https://drive.google.com/file/d/1w2ngXu-Miagq9_C2Osv7SJVe2A4nC0yC/view?usp=drive_link", "https://docs.google.com/document/d/1dsoFSJoXslB28oOeAUddzhdE22jZBlFx/edit?usp=drive_link&ouid=106988498767218567675&rtpof=true&sd=true", "https://docs.google.com/document/d/1XYwiTsWwRxVfqoSJz0FX8ovxpqK_UPdT/edit?usp=drive_link&ouid=106988498767218567675&rtpof=true&sd=true", "https://docs.google.com/document/d/1INRFWExZACsTm4bjstVG7gVdggZfbPbX/edit?usp=sharing&ouid=110681307565615179523&rtpof=true&sd=true", "https://docs.google.com/document/d/1FWOkQ7bv3reAlkuS7MIRJPgSyjVRT6HN/edit?usp=drive_link&ouid=110681307565615179523&rtpof=true&sd=true"]}, {"cells": ["", "", "", "", "ASR SLIP 1 IBS ASR-MOW.doc", "", "asr IBS.doc"], "links": [null, null, null, null, "https://docs.google.com/document/d/1KxpVRKEa5RpZfyXTBczaOglPlBOAd0tu/edit?usp=drive_link&ouid=106988498767218567675&rtpof=true&sd=true", null, "https://docs.google.com/document/d/1Oj0wWCGQ5_rA7vMsgVMLtCmtnj7m4Yl3/edit?usp=drive_link&ouid=110681307565615179523&rtpof=true&sd=true"]}, {"cells": ["3", "ATT", "ATT", "English", "---", "हिन्दी", "---"], "links": [null, null, "https://drive.google.com/open?id=1yiwFl7lIHN4HBQQ94mv6WBEPZkHd8jEF", "https://drive.google.com/file/d/1_ZRPC9AkwkjOr00Hj5DNcXT5lpXJDueq/view?usp=drive_link", null, "https://drive.google.com/file/d/1o3U-HBNJ96JT3Ry-q3_r9eJ1ogb94DFg/view?usp=drive_link", null]}, {"cells": ["4", "AWL", "AWL", "English", "---", "हिन्दी", "102-a से 102-i तक के पन्ने"], "links": [null, null, "https://drive.google.com/file/d/1ByqYnhSWQb4-dugteMkz-jmRi1YWxDx5/view?usp=drive_link", "https://docs.google.com/document/d/1dRXXI8c8q2AIwTE9AczAwt01JG5l4GqM/edit?usp=drive_link&ouid=106988498767218567675&rtpof=true&sd=true", null, "https://docs.google.com/document/d/1F81myg5T6rHVkR2h96TwQadOn6UGtAuk/edit?usp=sharing&ouid=110681307565615179523&rtpof=true&sd=true", null]}, {"cells": ["5", "BAT", "BAT", "English", "---", "हिन्दी", "---"], "links": [null, null, "https://drive.google.com/file/d/1lWrKhaYFd3RM8NOQBO2-9iYMk4jyRgJj/view?usp=drive_link", "https://drive.google.com/file/d/1PME0d2w_mGBfv85SIgDkQgdQ8hTm434l/view?usp=drive_link", null, "https://drive.google.com/file/d/1nWxwOKHraEozezNe0Qgs3oAh4bCgcBOw/view?usp=drive_link", null]}, {"cells": ["6", "BEAS", "BEAS", "English", "---", "हिन्दी", "---"], "links": [null, null, "https://drive.google.com/file/d/1oQRXgkRfhqdXAht3WFrTOzyYepWdEcG2/view?usp=drive_link", "https://docs.google.com/document/d/1gRYdMdXcj4jYUFVuMnpdXbs700NlldIo/edit?usp=drive_link&ouid=106988498767218567675&rtpof=true&sd=true", "https://docs.google.com/document/d/1VOunXlB8QZ_W_UQYY6A3TuZh_cOSOgpc/edit?usp=drive_link&ouid=106988498767218567675&rtpof=true&sd=true", "https://docs.google.com/document/d/1SFooOb608_XgIBM-Ko9x8vSs0c1q8OB4/edit?usp=sharing&ouid=110681307565615179523&rtpof=true&sd=true", "https://docs.google.com/document/d/19ZTneffndYa5MC8z7uFk7eYFRpbPVaV6/edit?usp=drive_link&ouid=110681307565615179523&rtpof=true&sd=true"]}, {"cells": ["7", "BGTN", "BGTN", "English", "---", "हिन्दी", "---"], "links": [null, null, "https://drive.google.com/open?id=1198iQkWib98pbCsnbifADAJZUjZ0rqIP", "https://docs.google.com/document/d/1e4eHRu9Ib2XFFUuuDj5wTfK3HyAjei3c/edit?usp=drive_link&ouid=106988498767218567675&rtpof=true&sd=true", null, "https://docs.google.com/document/d/1GPvGziAZpoNive7gs7uAyoyX0gvQpXEB/edit?usp=drive_link&ouid=110681307565615179523&rtpof=true&sd=true", null]}, {"cells": ["8", "BH-01", "BH-01", "English", "---", "हिन्दी", "16-a से 102-m तक के पन्ने"], "links": [null, null, "https://drive.google.com/file/d/1Ha4TSWBKsUzw9OgKEItAOFIrLJNX2UeJ/view?usp=drive_link", "https://drive.google.com/file/d/15ZbYPz9WGo1Zzql7DTY38qHS_6whdygM/view?usp=drive_link", null, "https://drive.google.com/file/d/1A-_FbtqIBuQCtv36bAiYBJmbkRkZlU5-/view?usp=drive_link", "https://drive.google.com/file/d/1vp-07bBau1UL0dofCMYJWg1ImASBqG1g/view?usp=drive_link"]}, {"cells": ["9", "BHM", "BHM", "English", "---", "हिन्दी", "---"], "links": [null, null, "https://drive.google.com/file/d/1Sc0kTQI8gw-57DSeLYWC2VEaMuLmkG-F/view?usp=drive_link", "https://docs.google.com/document/d/1NAWcwDx8y7oaO3kvERkDMJpgv8kQrKI9/edit?usp=drive_link&ouid=106988498767218567675&rtpof=true&sd=true", null, "https://docs.google.com/document/d/1SYtMLFvAVOvhwbmpObYfmUFLicitexu6/edit?usp=drive_link&ouid=110681307565615179523&rtpof=true&sd=true", null]}, {"cells": ["10", "BRW", "BRW", "English", "---", "हिन्दी", "---"], "links": [null, null, "https://drive.google.com/file/d/1IqkSxzTCwikdyEqvUoHCa_PnlRw5y-G6/view?usp=drive_link", "https://docs.google.com/document/d/1pc0PKejZo4zarkzG0n8YlDn4vQMruPtf/edit?usp=drive_link&ouid=106988498767218567675&rtpof=true&sd=true", "https://docs.google.com/document/d/13sbo7s1NqJNiTTwRTmyIEYnLucia-TdK/edit?usp=drive_link&ouid=106988498767218567675&rtpof=true&sd=true", "https://docs.google.com/document/d/1x8ei6itsdR95sMpiOd_q3tOiB9obPgs9/edit?usp=drive_link&ouid=110681307565615179523&rtpof=true&sd=true", "https://docs.google.com/document/d/1Z2YZj22saCctzKF2z1v8kc-dGf7vCule/edit?usp=drive_link&ouid=110681307565615179523&rtpof=true&sd=true"]}, {"cells": ["11", "BTR", "BTR", "English", "---", "हिन्दी", "---"], "links": [null, null, "https://drive.google.com/file/d/1CzkzAuq0qh690nezeLIcN5daDd7WRZSr/view?usp=drive_link", "https://docs.google.com/document/d/128LdqZnuFrOqcT_sMcJBWGarUUxHgl3W/edit?usp=drive_link&ouid=106988498767218567675&rtpof=true&sd=true", null, "https://drive.google.com/file/d/1CzkzAuq0qh690nezeLIcN5daDd7WRZSr/view?usp=drive_link", null]}, {"cells": ["12", "BTTN", "BTTN", "English", "---", "हिन्दी", "---"], "links": [null, null, "https://drive.google.com/file/d/1kaop8-9RtqYRoyoVtCrbmBBtmGSmv7Kt/view?usp=drive_link", "https://drive.google.com/file/d/1AbiA-E7V1t53_4y4A_wnsDeWPPZpI9Om/view?usp=drive_link", null, "https://drive.google.com/file/d/16ue8vpjbABqOEhhEE4PdUPWrH-Wj2LVl/view?usp=drive_link", null]}, {"cells": ["13", "BWZ", "BWZ", "English", "---", "हिन्दी", "---"], "links": [null, null, "https://drive.google.com/open?id=1k-QLyLMjQMYp8Y3rlaXS40nf__Gy9OmG", "https://drive.google.com/file/d/1Pg9peQRSOZqG7cFbY-CJJ6UQjfxShLtn/view?usp=drive_link", null, "https://drive.google.com/file/d/1qVu8EcKMfeLm_0K4FpknpA6xMQcTswJ_/view?usp=drive_link", null]}, {"cells": ["14", "BXB", "BXB", "English", "---", "हिन्दी", "---"], "links": [null, null, "https://drive.google.com/file/d/1VefoSXjy8Vkz6PuaB1SLxdr9qSFwyNLf/view?usp=drive_link", "https://drive.google.com/file/d/19qMhnXrrEbAUUE_YlYvXCLdwRW9srBtU/view?usp=drive_link", null, "https://drive.google.com/file/d/1C6DDsooDokgWLWLPts_XZtd7E5BP8n5_/view?usp=drive_link", null]}, {"cells": ["15", "BZG", "BZG", "English", "---", "हिन्दी", "---"], "links": [null, null, "https://drive.google.com/open?id=1zcVT8z6PNMlb2ihSwt5fNj8G1fXFZmFW", "https://docs.google.com/document/d/1ZNX39di7XoVcATjul9oQmaZqc_uiRHEm/edit?usp=drive_link&ouid=106988498767218567675&rtpof=true&sd=true", null, "https://docs.google.com/document/d/1GcpGYxmGhGqIij5yB8LNZWrbJOc2Q1xZ/edit?usp=drive_link&ouid=110681307565615179523&rtpof=true&sd=true", null]}, {"cells": ["16", "CBX", "CBX", "English", "---", "हिन्दी", "---"], "links": [null, null, "https://drive.google.com/file/d/13MUb6gmtDhumRcs3qDq65qLjyl74l9Ch/view?usp=drive_link", "https://docs.google.com/document/d/1k1JjVqf1vHQVsbsTHUHtLKBYQ1s434WO/edit?usp=drive_link&ouid=106988498767218567675&rtpof=true&sd=true", null, "https://docs.google.com/document/d/1Tp6A9CmfXWs7fD2cXToNPNsEZoVCcZ9x/edit?usp=drive_link&ouid=110681307565615179523&rtpof=true&sd=true", null]}, {"cells": ["17", "CEU", "CEU", "English", "---", "हिन्दी", "---"], "links": [null, null, "https://drive.google.com/open?id=1d3KqY9fjKJs7zkRZcdwoY0vgvIhsIJBt", "https://drive.google.com/file/d/1FAP_OuWMfDnTvbNw5Qd-M85WwcTja9bk/view?usp=drive_link", null, "https://drive.google.com/file/d/1CmTASdTDnIHyJw7NpMLVPdkuFC11fCrD/view?usp=drive_link", null]}, {"cells": ["18", "CIA", "CIA", "English", "---", "हिन्दी", "---"], "links": [null, null, "https://drive.google.com/file/d/1puXucosVgMbzB_Qeky3mgZ0tZNfpCzJZ/view?usp=drive_link", "https://docs.google.com/document/d/17U32uUTcz2VDCjDj5wst2TarVsSCewjF/edit?usp=drive_link&ouid=106988498767218567675&rtpof=true&sd=true", "https://docs.google.com/document/d/1197r-bQWWzLnBz9XjaNpN7iXUQOQumxX/edit?usp=drive_link&ouid=106988498767218567675&rtpof=true&sd=true", "https://docs.google.com/document/d/1041Wrx1KZlZ7FIee7OGNpYgHiYmpXu7V/edit?usp=drive_link&ouid=110681307565615179523&rtpof=true&sd=true", "https://docs.google.com/document/d/1-LtYiEJfr4pT0iWXjcaf2RiIWnTY9cNm/edit?usp=drive_link&ouid=110681307565615179523&rtpof=true&sd=true"]}, {"cells": ["19", "CKM", "CKM", "English", "---", "हिन्दी", "75-a से 75-m तक के पन्ने"], "links": [null, null, "https://drive.google.com/file/d/1Z7BgqDWLtKSTp9cUjMNd9xpv4kqPKALJ/view?usp=drive_link", "https://drive.google.com/file/d/1xYyE8VUWkOp-XWDFqiLtg_oiQxB0UXHK/view?usp=drive_link", null, "https://drive.google.com/file/d/1ZerA419WGAhbw1JxFMA2NQb6XJHU8Qcp/view?usp=drive_link", "https://drive.google.com/file/d/1SWGdHLmL2OSKAIHWos05elJ9buFTy_0S/view?usp=drive_link"]}, {"cells": ["20", "CWDA", "CWDA", "English", "---", "हिन्दी", "---"], "links": [null, null, "https://drive.google.com/file/d/1fVvsbdTCD-qDI4taEHNM5zJwwarO87G9/view?usp=drive_link", "https://docs.google.com/document/d/1q1mEb6m6j9uaECWitPkhbXHN-mB6sqac/edit?usp=drive_link&ouid=106988498767218567675&rtpof=true&sd=true", null, "https://docs.google.com/document/d/15zWCnoD1A89Uchpb0fBpD6m2Hjz8NUIZ/edit?usp=drive_link&ouid=110681307565615179523&rtpof=true&sd=true", null]}, {"cells": ["21", "DAU", "DAU", "English", "---", "हिन्दी", "---"], "links": [null, null, "https://drive.google.com/file/d/1fE9NcjRga4pC092Z-vMVNDiq2lZGQkAy/view?usp=drive_link", "https://docs.google.com/document/d/1mK_ervQSUYoVFVs-7Dz54SDxlar2PGag/edit?usp=drive_link&ouid=106988498767218567675&rtpof=true&sd=true", null, "https://docs.google.com/document/d/1CKDw4x536MFmfeAuaPz1O1GOTE_mCWPP/edit?usp=drive_link&ouid=110681307565615179523&rtpof=true&sd=true", null]}, {"cells": ["22", "DDL", "DDL", "English", "---", "हिन्दी", "---"], "links": [null, null, "https://drive.google.com/file/d/1XTsZVvqiK6tfppA0d73eALI6FTl1ebjP/view?usp=drive_link", "https://docs.google.com/document/d/1zli0nxPnXOG4qK0izq02SerIbx28DldZ/edit?usp=drive_link&ouid=106988498767218567675&rtpof=true&sd=true", null, "https://docs.google.com/document/d/1XZwm0aNXaB4c_jp64WuGvQ0ewoEY6RT0/edit?usp=drive_link&ouid=110681307565615179523&rtpof=true&sd=true", null]}, {"cells": ["23", "DIW", "DIW", "English", "---", "हिन्दी", "शुद्धि पत्र"], "links": [null, null, "https://drive.google.com/file/d/1--pG126S69bBJLkieJk7vW-Pomc_y_3U/view?usp=drive_link", "https://docs.google.com/document/d/1IjOTyzNQ0Rz4HFwloH1cIEwecVm8BOND/edit?usp=drive_link&ouid=106988498767218567675&rtpof=true&sd=true", "https://docs.google.com/document/d/1OHMn_hy0HsFEUAkyqXzcJA4Q4wUNP3os/edit?usp=drive_link&ouid=106988498767218567675&rtpof=true&sd=true", "https://docs.google.com/document/d/1re9zK1-0wJhb6F-CJ6tP5gXf1hE-DOQJ/edit?usp=drive_link&ouid=110681307565615179523&rtpof=true&sd=true", "https://docs.google.com/document/d/1HjvHptFFPw1DgfNBTb_3aBIYAXZpQSbp/edit?usp=drive_link&ouid=110681307565615179523&rtpof=true&sd=true"]}, {"cells": ["", "", "", "", "DIW SLIP 2 BPAC DIW-HMR.doc", "", "SLIP DIW BI.doc"], "links": [null, null, null, null, "https://docs.google.com/document/d/1AyOGIfQR4n5h3PSITKR_K1k6G7nkoqv9/edit?usp=drive_link&ouid=106988498767218567675&rtpof=true&sd=true", null, "https://docs.google.com/document/d/1RW-KrEGifS_33tH1kfDEhcMW7I-8CPp_/edit?usp=drive_link&ouid=110681307565615179523&rtpof=true&sd=true"]}, {"cells": ["24", "FDK", "FDK", "English", "---", "हिन्दी", "शुद्धि पत्र"], "links": [null, null, "https://drive.google.com/open?id=1TJQyO3d-e36EjBSYjj5BV7Cc1ChFAq8Q", "https://docs.google.com/document/d/1hrDOFTT7zhwk0cJK2pqHpuc1EJT-d9Zu/edit?usp=drive_link&ouid=106988498767218567675&rtpof=true&sd=true", null, "https://docs.google.com/document/d/1W14yijJMXCtS6NqeRUIzF6Mr687b_mj-/edit?usp=drive_link&ouid=110681307565615179523&rtpof=true&sd=true", null]}, {"cells": ["25", "FKA", "FKA", "English", "---", "हिन्दी", "शुद्धि पत्र"], "links": [null, null, "https://drive.google.com/file/d/1ab52rdt3qM9UWFTm-Z95b63UL_K89C7f/view?usp=drive_link", "https://docs.google.com/document/d/19g6Ix7gM3Fyodiuwq8mHY8hTAV972-h2/edit?usp=drive_link&ouid=106988498767218567675&rtpof=true&sd=true", null, "https://docs.google.com/document/d/1SZTXjxoPG_ZGbdyv9H4S7K5pL1UhCeYI/edit?usp=drive_link&ouid=110681307565615179523&rtpof=true&sd=true", null]}, {"cells": ["26", "FZP", "FZP", "English", "---", "हिन्दी", "103-a से 103-k तक के पन्ने"], "links": [null, null, "https://drive.google.com/open?id=16O6OSlNDFk17MoSn1Qqbksn_SKZSFsS0", "https://docs.google.com/document/d/1LFfvlvkhbT24iBbGT0FmvfjZcRFaQHS1/edit?usp=drive_link&ouid=106988498767218567675&rtpof=true&sd=true", "https://docs.google.com/document/d/1uVateJ1S929pK_gY3Hzt-6QnaiEXvvdk/edit?usp=drive_link&ouid=106988498767218567675&rtpof=true&sd=true", "https://docs.google.com/document/d/1nl6miN68eLmjqzdsSkeiQhyHcDuXFEfI/edit?usp=drive_link&ouid=110681307565615179523&rtpof=true&sd=true", "https://drive.google.com/file/d/1Xl0_DYVb_w_Vza0mMA9AbO2vPSb8zeZ_/view?usp=drive_link"]}, {"cells": ["27", "FZR", "FZR", "English", "---", "हिन्दी", "शुद्धि पत्र"], "links": [null, null, "https://drive.google.com/file/d/19zRMLPPe1RLuF8YOmIyln2cx_bVWtMdZ/view?usp=drive_link", "https://docs.google.com/document/d/10V_GZQgGJQ4JAjsVElIw2K_YBLRqB2cG/edit?usp=drive_link&ouid=106988498767218567675&rtpof=true&sd=true", null, "https://docs.google.com/document/d/1WLgnMCE2ZoHjCeBvySx4WN9aTO5cnJxS/edit?usp=drive_link&ouid=110681307565615179523&rtpof=true&sd=true", null]}, {"cells": ["28", "GHA", "GHA", "English", "---", "हिन्दी", "55-a से 55-k तक के पन्ने"], "links": [null, null, "https://drive.google.com/file/d/1tq-81S07_V16sDEMBcEJTyK6OGgS-CQr/view?usp=drive_link", "https://docs.google.com/document/d/1-w2A7zEtL9x1YM6oz1s1_WM_oSXEQpVI/edit?usp=drive_link&ouid=106988498767218567675&rtpof=true&sd=true", "https://docs.google.com/document/d/1FXCLLxQVOMOxI0bZQTSnRa_9j80phB2Q/edit?usp=drive_link&ouid=106988498767218567675&rtpof=true&sd=true", "https://docs.google.com/document/d/1aure9WwHbQJ5eYPu3iMCqm9a7npGN9oz/edit?usp=drive_link&ouid=110681307565615179523&rtpof=true&sd=true", "https://drive.google.com/file/d/1qy3GsAtwYFoXUtX-a3xIqXtqv55c3yeL/view?usp=drive_link"]}, {"cells": ["29", "GHS", "GHS", "English", "---", "हिन्दी", "शुद्धि पत्र"], "links": [null, null, "https://drive.google.com/file/d/1I95xAn0ckJEfxHCZsSAOJoVx7IZLB-6Y/view?usp=drive_link", "https://docs.google.com/document/d/1BhIX0fVfJ9n-4y_yOB0Nme6p34RkwByc/edit?usp=drive_link&ouid=106988498767218567675&rtpof=true&sd=true", null, "https://docs.google.com/document/d/1WORWpcY1DzA-EXBrAFizvZ1E1YPaU0qh/edit?usp=drive_link&ouid=110681307565615179523&rtpof=true&sd=true", null]}, {"cells": ["30", "GJUT", "GJUT", "English", "---", "हिन्दी", "शुद्धि पत्र"], "links": [null, null, "https://drive.google.com/file/d/1dYLOZhiJ3EnAGU-BlGriMarqRJI4s-QP/view?usp=drive_link", "https://docs.google.com/document/d/1T3bzPSM4Fl5JWSrpkxGX4ikxHhODSpkt/edit?usp=drive_link&ouid=106988498767218567675&rtpof=true&sd=true", null, "https://docs.google.com/document/d/1C1L8VUZmyYhFeiw7nVCsyuJPXnMxJYbc/edit?usp=drive_link&ouid=110681307565615179523&rtpof=true&sd=true", null]}, {"cells": ["31", "GNA", "GNA", "English", "---", "हिन्दी", "शुद्धि पत्र"], "links": [null, null, "https://drive.google.com/file/d/1k1CEFgHV5wYN2BOWUPd837uvwhzXP_eT/view?usp=drive_link", "https://drive.google.com/file/d/1WNed1qRC23ghGMK4xkClFUI6XUnk9Tdl/view?usp=drive_link", null, "https://drive.google.com/file/d/1HUDc22Tpo2i0JG3smQt5Bz_KQIklRlow/view?usp=drive_link", null]}, {"cells": ["32", "GOD", "GOD", "English", "---", "हिन्दी", "शुद्धि पत्र"], "links": [null, null, "https://drive.google.com/file/d/1TuhnObaybplAEgCoAP_ZQ6XrIp4WWiZX/view?usp=drive_link", "https://drive.google.com/file/d/1CfKf5o4kCZZ0-QLVsECyOebb-9MtLDmv/view?usp=drive_link", null, "https://drive.google.com/file/d/1ZnsIcuhp7HgBJqcm2MgZEfMznNhmfSO2/view?usp=drive_link", null]}, {"cells": ["33", "GRY", "GRY", "English", "---", "हिन्दी", "शुद्धि पत्र"], "links": [null, null, "https://drive.google.com/file/d/1tqMJwTWOHWOXHJEEQCAlllBJIMHOzlh4/view?usp=drive_link", "https://docs.google.com/document/d/1gBLNTWlfgWfEpO2yQV6e9saTMtj96Wnk/edit?usp=drive_link&ouid=106988498767218567675&rtpof=true&sd=true", null, "https://docs.google.com/document/d/1HOH4nr-m0VEy6ZQOKNqpoGSNxq-H9Ozv/edit?usp=drive_link&ouid=110681307565615179523&rtpof=true&sd=true", null]}, {"cells": ["34", "GWSB", "GWSB", "English", "---", "हिन्दी", "43-a से 43-mm तक के पन्ने"], "links": [null, null, "https://drive.google.com/file/d/1cKG2yH-znP8D6GL7k8sEmL8ESxhU2Tvg/view?usp=drive_link", "https://docs.google.com/document/d/14_6KyrtGz94xYhBQ0BolSxfJuESalCyb/edit?usp=drive_link&ouid=106988498767218567675&rtpof=true&sd=true", null, "https://docs.google.com/document/d/1eG9ZcYpBOWTwlMkbPX90zJ25MlThd49Y/edit?usp=drive_link&ouid=110681307565615179523&rtpof=true&sd=true", "https://drive.google.com/file/d/136aIXveqze4Nox5c9SyoLRshxNxlH-8-/view?usp=drive_link"]}, {"cells": ["35", "GZS", "GZS", "English", "---", "हिन्दी", "शुद्धि पत्र"], "links": [null, null, "https://drive.google.com/file/d/1nEDyZrJFtSFgnuGXexsFP0vKYCv5Y85c/view?usp=drive_link", "https://drive.google.com/file/d/1Tv4v-zdK6I7aBUO1mSFanewFeQAR6ViY/view?usp=drive_link", null, "https://drive.google.com/file/d/1hQrvKVS9_2S8Jnx0LZ04QMuaVgOMg8VX/view?usp=drive_link", null]}, {"cells": ["36", "HMR", "HMR", "English", "---", "हिन्दी", "शुद्धि पत्र"], "links": [null, null, "https://drive.google.com/file/d/1T04pyqHEqDYM39FUOXBkbvr5_bo04vEu/view?usp=drive_link", "https://docs.google.com/document/d/1KMjIEMGOt8UPjTdhNKmxLPhpRvTymHkg/edit?usp=drive_link&ouid=106988498767218567675&rtpof=true&sd=true", "https://docs.google.com/document/d/1FI6lFuYixzTbxg_sVpSWRE3bUE90TGhv/edit?usp=drive_link&ouid=106988498767218567675&rtpof=true&sd=true", "https://docs.google.com/document/d/1WNqrOAdnVlrRWlrUNdQyoidJFBhS92E_/edit?usp=drive_link&ouid=110681307565615179523&rtpof=true&sd=true", "https://docs.google.com/document/d/1lDnZhHv8Kt_K33WPSknEuA_1b3gkfrS5/edit?usp=drive_link&ouid=110681307565615179523&rtpof=true&sd=true"]}, {"cells": ["", "", "", "", "HMR SLIP1 BPAC HMR-DIW.doc", "", "HMR SLIP BI HMR-DIW.doc"], "links": [null, null, null, null, "https://docs.google.com/document/d/1GlPulGpsqtqlOU18msB0XHIGsBONBQIH/edit?usp=drive_link&ouid=106988498767218567675&rtpof=true&sd=true", null, "https://docs.google.com/document/d/1wXLFCyWk77AW4_yB_oGreS6N6SvGthCx/edit?usp=drive_link&ouid=110681307565615179523&rtpof=true&sd=true"]}, {"cells": ["37", "HSQ", "HSQ", "English", "---", "हिन्दी", "शुद्धि पत्र"], "links": [null, null, "https://drive.google.com/file/d/1u0_iAwx6HF4IQVlEAoG-FQeNFEIFmP6w/view?usp=drive_link", "https://drive.google.com/file/d/1z_9RXqTB-LgHmHQVYxtNO_-y28QN0aP9/view?usp=drive_link", null, "https://drive.google.com/file/d/1GhaoV2ZnAQDRqdLw4SzQk6DO9ydLjnaT/view?usp=drive_link", null]}, {"cells": ["38", "HSX", "HSX", "English", "---", "हिन्दी", "शुद्धि पत्र"], "links": [null, null, "https://drive.google.com/open?id=1GKVAZO2t2Yl9W8iBS8MA_Z-3J97IXmre", "https://drive.google.com/file/d/1-XnY6UKB6LzUSfRcFnb60xNhXiThj89Z/view?usp=drive_link", null, "https://drive.google.com/file/d/1Ws-qdfboL591FH10DlewLELrZeRb4qA9/view?usp=drive_link", null]}, {"cells": ["39", "JBD", "JBD", "English", "---", "हिन्दी", "शुद्धि पत्र"], "links": [null, null, "https://drive.google.com/open?id=15IPFRqTRWwfxy1i0QRAIUY68q8JFNZT-", "https://drive.google.com/file/d/1EBg30VnuNXs4ArfsLyY-nV2wL9yfPl7i/view?usp=drive_link", null, "https://drive.google.com/file/d/1uTVh2p5-pSJFHZeek3ztcqGpcNwwaldV/view?usp=drive_link", null]}, {"cells": ["40", "JGN", "JGN", "English", "---", "हिन्दी", "शुद्धि पत्र"], "links": [null, null, "https://drive.google.com/file/d/1qwCG1Hgxzoz8KVVKfAG7qaQL4zm7nHb-/view?usp=drive_link", "https://docs.google.com/document/d/1G42WOmKgOzYV1Y5QMq1_QbXTxvuE4ei-/edit?usp=drive_link&ouid=106988498767218567675&rtpof=true&sd=true", null, "https://docs.google.com/document/d/1h8Xns9xQtmXikuidRw-v42M_TVSaA0y3/edit?usp=drive_link&ouid=110681307565615179523&rtpof=true&sd=true", null]}, {"cells": ["41", "JNL", "JNL", "English", "---", "हिन्दी", "शुद्धि पत्र"], "links": [null, null, "https://drive.google.com/open?id=1k1KxZcUIelMkdj61uhZUbh7h705A3Hpk", "https://docs.google.com/document/d/1I8JMelbB2DMvKuYz3ZruLJnbXQUsSspg/edit?usp=drive_link&ouid=106988498767218567675&rtpof=true&sd=true", "https://docs.google.com/document/d/1nKGjQlx7IYT2Jfeq2cU1MX9hGf39qWRl/edit?usp=drive_link&ouid=106988498767218567675&rtpof=true&sd=true", "https://docs.google.com/document/d/1kgBskLJp6hAltfZivTiNJDdXQRetEj_g/edit?usp=drive_link&ouid=110681307565615179523&rtpof=true&sd=true", "https://docs.google.com/document/d/16DmvBDlAAlXDQKAKrSMs-JqOZmuUahQO/edit?usp=drive_link&ouid=110681307565615179523&rtpof=true&sd=true"]}, {"cells": ["42", "JNT", "JNT", "English", "---", "हिन्दी", "शुद्धि पत्र"], "links": [null, null, "https://drive.google.com/open?id=1S-nedY_PYos6FuHIIuN6n2WVxwJBhG4U", "https://drive.google.com/file/d/1358NtbbDzP7DaUytOYoQ5w0JjYHJfz5O/view?usp=drive_link", null, "https://drive.google.com/file/d/1Pet51Pv0qu009cL0ajT96bay8DE8TM7O/view?usp=drive_link", null]}, {"cells": ["43", "JRC", "JRC", "English", "---", "हिन्दी", "शुद्धि पत्र"], "links": [null, null, "https://drive.google.com/file/d/1yalU3d1U1wiYVg-k2awy6C1ynD-S3CAS/view?usp=drive_link", "https://drive.google.com/file/d/1rP4V_nRYNiAPy-89AcrOTipEYCi1wOQe/view?usp=drive_link", null, "https://drive.google.com/file/d/1yalU3d1U1wiYVg-k2awy6C1ynD-S3CAS/view?usp=drive_link", null]}, {"cells": ["44", "JTH", "JTH", "English", "---", "हिन्दी", "शुद्धि पत्र"], "links": [null, null, null, "https://drive.google.com/file/d/1A8hui4wi-JDqOdTVRzhJdOXr6ph6vu4i/view?usp=drive_link", null, "https://drive.google.com/file/d/1qDIUCBRB59hX3O5KBMXTPw0Gt_FkfGEz/view?usp=drive_link", null]}, {"cells": ["45", "JUC", "JUC", "English", "---", "हिन्दी", "शुद्धि पत्र"], "links": [null, null, "https://drive.google.com/file/d/1LTngVWK4XA9iy4xUvDu_GA2Aume7p4_P/view?usp=drive_link", "https://docs.google.com/document/d/1QNF0_tTXf56LZMvnHK85biEH1eo7phe4/edit?usp=drive_link&ouid=106988498767218567675&rtpof=true&sd=true", null, "https://docs.google.com/document/d/1pSm_VuOLoGGGmgN7wNMUXEXWeq0vBTr7/edit?usp=drive_link&ouid=110681307565615179523&rtpof=true&sd=true", null]}, {"cells": ["46", "KBU", "KBU", "English", "---", "हिन्दी", "शुद्धि पत्र"], "links": [null, null, "https://drive.google.com/file/d/1fdkV2brloYVWiNsTui5jG1VjfDi5Fn-q/view?usp=drive_link", "https://drive.google.com/file/d/1mi7HTBAqiuMtXsqKPlJlPN5POiWsNd4N/view?usp=drive_link", null, "https://drive.google.com/file/d/1S70v7ydUD-E2UBlWAsTxzPlDva9BzkXj/view?usp=drive_link", null]}, {"cells": ["47", "KDSB", "KDSB", "English", "---", "हिन्दी", "शुद्धि पत्र"], "links": [null, null, "https://drive.google.com/file/d/10pDLPFCY3GeofpI3Q_iiOIsgJ5H4T84p/view?usp=drive_link", "https://docs.google.com/document/d/1OB-pkVRvxe5Vfyqj8rTNf76hv2nwso7K/edit?usp=drive_link&ouid=106988498767218567675&rtpof=true&sd=true", null, "https://docs.google.com/document/d/1p01NaP-fX-lhJ9L1UPq8ZYwZKxOqimFm/edit?usp=drive_link&ouid=110681307565615179523&rtpof=true&sd=true", null]}, {"cells": ["48", "KKL", "KKL", "English", "---", "हिन्दी", "शुद्धि पत्र"], "links": [null, null, "https://drive.google.com/file/d/1n5ElVZmIM3SOf6thAz_kq7wOHCGkJlv5/view?usp=drive_link", "https://docs.google.com/document/d/1xDrFjnJD1LY4tvje5UdGgrAA66ueojl3/edit?usp=drive_link&ouid=106988498767218567675&rtpof=true&sd=true", "https://docs.google.com/document/d/1mDI1Wp6fh3dwDWpWYyGd5efhZIHu1dpN/edit?usp=drive_link&ouid=106988498767218567675&rtpof=true&sd=true", "https://docs.google.com/document/d/1Nu34iFBqEG5klttWd07x1v_OOHhvsvaK/edit?usp=drive_link&ouid=110681307565615179523&rtpof=true&sd=true", "https://docs.google.com/document/d/1xkAhxynOvLsWegIdadAWVDoq_9E0NKvk/edit?usp=drive_link&ouid=110681307565615179523&rtpof=true&sd=true"]}, {"cells": ["", "", "", "", "KKL SLIP 2 CTRT TO OTRT LC 28.doc", "", "kkl slip 2.docx"], "links": [null, null, null, null, "https://docs.google.com/document/d/1IUQD-PeYeuvGzw3zABDfwVc67JJZvo4v/edit?usp=drive_link&ouid=106988498767218567675&rtpof=true&sd=true", null, "https://docs.google.com/document/d/1A5WKZJ8lASsyOqY89IyC-nf-rY33KfXJ/edit?usp=drive_link&ouid=110681307565615179523&rtpof=true&sd=true"]}, {"cells": ["49", "KKP", "KKP", "English", "---", "हिन्दी", "शुद्धि पत्र"], "links": [null, null, "https://drive.google.com/file/d/1ipfvJGqTq8rn8ODHcdRPwJYEO0rHed2D/view?usp=drive_link", "https://docs.google.com/document/d/1h56UvCCiMR-MqGQFZVaGjkLo3DYyQCSz/edit?usp=drive_link&ouid=106988498767218567675&rtpof=true&sd=true", "https://docs.google.com/document/d/1XdKq7vPOwNVtkjeXpgT_BArHWxdej00E/edit?usp=drive_link&ouid=106988498767218567675&rtpof=true&sd=true", "https://docs.google.com/document/d/1SPY6rDP9kJMd2gMW_lrYLXmWVSAQvM--/edit?usp=drive_link&ouid=110681307565615179523&rtpof=true&sd=true", "https://docs.google.com/document/d/1RHqCUY0-5o8qbbjE9mralE2FQ_ORKQSu/edit?usp=drive_link&ouid=110681307565615179523&rtpof=true&sd=true"]}, {"cells": ["50", "KNG", "KNG", "English", "---", "हिन्दी", "शुद्धि पत्र"], "links": [null, null, "https://drive.google.com/file/d/1zvvkUstCzU7tQ449DZmSFd8FO-Z560yB/view?usp=drive_link", "https://docs.google.com/document/d/1T0KAP4__OcGkxKERsOSvos_yNKe385N8/edit?usp=drive_link&ouid=106988498767218567675&rtpof=true&sd=true", null, "https://docs.google.com/document/d/1T0KAP4__OcGkxKERsOSvos_yNKe385N8/edit?usp=drive_link&ouid=106988498767218567675&rtpof=true&sd=true", null]}, {"cells": ["51", "KRE", "KRE", "English", "---", "हिन्दी", "शुद्धि पत्र"], "links": [null, null, "https://drive.google.com/file/d/16zxuEEo0hJCDCbGuV3kQ_m6LgLII9CHz/view?usp=drive_link", "https://docs.google.com/document/d/1LjzVX4BUvcYKIwKTll5uBngX-1Tf603Z/edit?usp=drive_link&ouid=106988498767218567675&rtpof=true&sd=true", null, "https://docs.google.com/document/d/120CEeT6978jJ6_J5TcCjdDcITnO-vbVG/edit?usp=drive_link&ouid=110681307565615179523&rtpof=true&sd=true", null]}, {"cells": ["52", "KSA", "KSA", "English", "---", "हिन्दी", "शुद्धि पत्र"], "links": [null, null, "https://drive.google.com/file/d/1C01Ftbr2NMpobhw5Ij0LtF4jZtQpcZJE/view?usp=drive_link", "https://docs.google.com/document/d/1x1lQPB3rqieaT6oCXXoeLfvbsfFxrPU2/edit?usp=drive_link&ouid=106988498767218567675&rtpof=true&sd=true", null, "https://docs.google.com/document/d/11bmBiEjo7_Yy-7VKcwWpj5xmTu2qTDYm/edit?usp=drive_link&ouid=110681307565615179523&rtpof=true&sd=true", null]}, {"cells": ["53", "KUKA", "KUKA", "English", "---", "हिन्दी", "शुद्धि पत्र"], "links": [null, null, "https://drive.google.com/file/d/1NeJ5p40XVQ_MA6iX-dab_Wcd3IkJu4ZH/view?usp=drive_link", "https://docs.google.com/document/d/1MYC8kPt_VZ0ZyQ-qt6UtBRDwOKwa6u0m/edit?usp=drive_link&ouid=106988498767218567675&rtpof=true&sd=true", null, "https://docs.google.com/document/d/1pIWIgOmFYZS1LKpys2uVcvEtDt-BxCxn/edit?usp=drive_link&ouid=110681307565615179523&rtpof=true&sd=true", null]}, {"cells": ["54", "KUPR", "KUPR", "English", "---", "हिन्दी", "शुद्धि पत्र"], "links": [null, null, "https://drive.google.com/file/d/1VU-xQ2FeDEAVbm2XPOWpILwaB2nRu3Az/view?usp=drive_link", "https://docs.google.com/document/d/1RJ4vQ0l2dWoiwvFhBiqBGQSEHe6dE4y0/edit?usp=drive_link&ouid=106988498767218567675&rtpof=true&sd=true", null, "https://docs.google.com/document/d/1PnOksZC5xkHwPmNzk0gF5SxFGLULsQZn/edit?usp=drive_link&ouid=110681307565615179523&rtpof=true&sd=true", null]}, {"cells": ["55", "KWJ", "KWJ", "English", "---", "हिन्दी", "शुद्धि पत्र"], "links": [null, null, "https://drive.google.com/open?id=1aIpUsqqOOBfRSnFyT91S9YFoRMwYtWUI", "https://docs.google.com/document/d/1z2y9bvrMDy4bLVg9GJFw1C7rKzi_xLLi/edit?usp=drive_link&ouid=106988498767218567675&rtpof=true&sd=true", null, "https://docs.google.com/document/d/153LqSO4E2gjmHoAzeIfzB2eCqgDypbdq/edit?usp=drive_link&ouid=110681307565615179523&rtpof=true&sd=true", null]}, {"cells": ["56", "KXH", "KXH", "English", "---", "हिन्दी", "शुद्धि पत्र"], "links": [null, null, "https://drive.google.com/open?id=1mwpzdXP5SZHA1RNK7jvMIom9LwCIzGDC", "https://drive.google.com/file/d/18sJfnbddyhdyu3y1rhYdNWUbXf77n-dK/view?usp=drive_link", null, "https://drive.google.com/file/d/1WomftMil-U79HwwZgQe-lsWLXHAkVwar/view?usp=drive_link", null]}, {"cells": ["57", "LDH", "LDH", "English", "---", "हिन्दी", "शुद्धि पत्र"], "links": [null, null, "https://drive.google.com/file/d/1qNDVhTPPejCr_AnLrVnM6kPUFyESQhNk/view?usp=drive_link", "https://docs.google.com/document/d/1lw3HG00FYyE4reN5VzcAXXc0EdhW12T0/edit?usp=drive_link&ouid=106988498767218567675&rtpof=true&sd=true", "https://docs.google.com/document/d/1q0JW7mxPvk_UV63fx5vWZygiAVnw52iU/edit?usp=drive_link&ouid=106988498767218567675&rtpof=true&sd=true", "https://docs.google.com/document/d/1mMvESBMuuBrQuquc3qg1yRP46fcraUsA/edit?usp=drive_link&ouid=110681307565615179523&rtpof=true&sd=true", "https://docs.google.com/document/d/1hAv1COjqMXVT3Bn62p1fX0u0gM4x2ABz/edit?usp=drive_link&ouid=110681307565615179523&rtpof=true&sd=true"]}, {"cells": ["", "", "", "", "LDH SLIP 4 IBS LDH-DDL.doc", "", "App F LDH.doc"], "links": [null, null, null, null, "https://docs.google.com/document/d/19Yq0mjIXEmt4SExg9ViarGIVkg_OKMvd/edit?usp=drive_link&ouid=106988498767218567675&rtpof=true&sd=true", null, "https://docs.google.com/document/d/1jJTEwMeGuvpauw1wqjIUuo-gyjKeor1Z/edit?usp=drive_link&ouid=110681307565615179523&rtpof=true&sd=true"]}, {"cells": ["58", "LDK", "LDK", "English", "---", "हिन्दी", "शुद्धि पत्र"], "links": [null, null, "https://drive.google.com/file/d/1zv_Ei8sJNpeoR6REQgbc_M0ZxhmdZT6v/view?usp=drive_link", "https://docs.google.com/document/d/1LU70jNXu7q5KexJ4ZUmfCCyLHwQ3Qg0X/edit?usp=drive_link&ouid=106988498767218567675&rtpof=true&sd=true", null, "https://docs.google.com/document/d/146p48eAaMskTxqLAWuLM2mr1oGOFCY_M/edit?usp=drive_link&ouid=110681307565615179523&rtpof=true&sd=true", null]}, {"cells": ["59", "LDW", "LDW", "English", "---", "हिन्दी", "शुद्धि पत्र"], "links": [null, null, "https://drive.google.com/file/d/1ocvLhmI3ZF-_DeJDQpHH9LeOrb_elZGs/view?usp=drive_link", "https://docs.google.com/document/d/1omlnG2U5F5m0kCGtQcVK1qhx9jMNw-d3/edit?usp=drive_link&ouid=106988498767218567675&rtpof=true&sd=true", null, "https://drive.google.com/file/d/1fHrPlWk0TfjSbgZE2hNU7nL6HAmgxElc/view?usp=drive_link", null]}, {"cells": ["60", "LKW", "LKW", "English", "---", "हिन्दी", "शुद्धि पत्र"], "links": [null, null, "https://drive.google.com/file/d/1rkYwdZkW-u4CfBhe2wnhiXm78CxcdQ63/view?usp=drive_link", "https://docs.google.com/document/d/1-ifbOTufFNfvu_Nf5TuvR6Vz5RW5G6pK/edit?usp=drive_link&ouid=106988498767218567675&rtpof=true&sd=true", "https://docs.google.com/document/d/12_kmUSVDHsxuVL4kL6YmREVyDqMNzDE9/edit?usp=drive_link&ouid=106988498767218567675&rtpof=true&sd=true", "https://docs.google.com/document/d/1gxHd5wpLMHQk5cLeetC86Jg2mlK5mIqd/edit?usp=drive_link&ouid=110681307565615179523&rtpof=true&sd=true", "https://docs.google.com/document/d/1MhM4CyCUuURFOw_mnnLh_VeRPuIG6o3f/edit?usp=drive_link&ouid=110681307565615179523&rtpof=true&sd=true"]}, {"cells": ["61", "LNK", "LNK", "English", "---", "हिन्दी", "शुद्धि पत्र"], "links": [null, null, "https://drive.google.com/open?id=1zmNAMYvhoZGexTRWmCQKAbMLJ2ob9rG3", "https://drive.google.com/file/d/1P6ThjYE0oyi-NsBgp4cN-9Q_h4Wfsl9y/view?usp=drive_link", null, "https://drive.google.com/file/d/1_vM0jBy1L_wAcoHlvROOoYdgrOE4ZI51/view?usp=drive_link", null]}, {"cells": ["62", "MAUL", "MAUL", "English", "---", "हिन्दी", "शुद्धि पत्र"], "links": [null, null, "https://drive.google.com/file/d/15hyqfErgj5vJgu5kF3z6gqyLIofx2Kgy/view?usp=drive_link", "https://drive.google.com/file/d/1IkhJCt3tINXgOl_HUf3NclZY-cpTLsRR/view?usp=drive_link", null, "https://drive.google.com/file/d/1Tnyfq1WN6MXP7yqC9SfVq9YSaMozt0XV/view?usp=drive_link", null]}, {"cells": ["63", "MFM", "MFM", "English", "---", "हिन्दी", "शुद्धि पत्र"], "links": [null, null, "https://drive.google.com/file/d/1uJKzbizLSsTsm8obgUoZkL5wTou1LdhI/view?usp=drive_link", "https://drive.google.com/file/d/1vhzL3pmu-9awQCOd0eGKiDwFJnAg7nvJ/view?usp=drive_link", null, "https://drive.google.com/file/d/1wtbcrjbr7mmfC2IRNcWfKI7xrEph1nmO/view?usp=drive_link", null]}, {"cells": ["64", "MKS", "MKS", "English", "---", "हिन्दी", "शुद्धि पत्र"], "links": [null, null, "https://drive.google.com/open?id=1TTXRx00RFl8K5RdPQRxv57ijfs56-zY-", "https://drive.google.com/file/d/11r0s2AuDO5cxDoT4Q6TMbgLQYpaSwoXZ/view?usp=drive_link", null, "https://drive.google.com/file/d/1oPGGYeWf7JKKv8-L4PoEUfUDh15NW_L3/view?usp=drive_link", null]}, {"cells": ["65", "MLX", "MLX", "English", "---", "हिन्दी", "शुद्धि पत्र"], "links": [null, null, "https://drive.google.com/file/d/1M5l71lWDbx_TWcEBR6kQN1NsVPnUdPDh/view?usp=drive_link", "https://drive.google.com/file/d/1SfvwMQhOXG0kkQ46QMnycTTGqDkHwFmu/view?usp=drive_link", null, "https://drive.google.com/file/d/17Clgze0Dvh6jgZzTfRb-alt5iaSNGUkj/view?usp=drive_link", null]}, {"cells": ["66", "MOGA", "MOGA", "English", "---", "हिन्दी", "शुद्धि पत्र"], "links": [null, null, "https://drive.google.com/file/d/1FevqnDK4e76K739clEAI1wWDdRnXyxPy/view?usp=drive_link", "https://drive.google.com/file/d/1KXYUMXAR9gD5Ht6C9UdoOTXgeuqrqe-7/view?usp=drive_link", null, "https://drive.google.com/file/d/1GRXL1cZL-JWnNPTSuvY23IlNKUEPCLSu/view?usp=drive_link", null]}, {"cells": ["67", "MOW", "MOW", "English", "---", "हिन्दी", "शुद्धि पत्र"], "links": [null, null, "https://drive.google.com/file/d/1FevqnDK4e76K739clEAI1wWDdRnXyxPy/view?usp=drive_link", "https://docs.google.com/document/d/17sKUs5sai5AmFsww_0X6S3KG7k0u_sqf/edit?usp=drive_link&ouid=106988498767218567675&rtpof=true&sd=true", null, "https://docs.google.com/document/d/1q2GsDHnQI_g4TNVKHTKmCFsEOhjxuavF/edit?usp=drive_link&ouid=110681307565615179523&rtpof=true&sd=true", null]}, {"cells": ["68", "MQS", "MQS", "English", "---", "हिन्दी", "शुद्धि पत्र"], "links": [null, null, "https://drive.google.com/open?id=15ZQBdhtQO_Y8kcVba-UdhhsC4c92gTHI", "https://docs.google.com/document/d/1YLost__USoV0qf8Tfi0aKDu0HVcOW9oL/edit?usp=drive_link&ouid=106988498767218567675&rtpof=true&sd=true", null, "https://docs.google.com/document/d/1K2nJcUpNiLZTqpwKFmv9GiIua0Wg3uWP/edit?usp=drive_link&ouid=110681307565615179523&rtpof=true&sd=true", null]}, {"cells": ["69", "MWX", "MWX", "English", "---", "हिन्दी", "शुद्धि पत्र"], "links": [null, null, "https://drive.google.com/file/d/1yyzxSAPDmOZUPVPyhDR7W_rsyjKXKoN_/view?usp=drive_link", "https://docs.google.com/document/d/1L0dauDKiM3eMZMpDvgNyf0C5QQvTEueB/edit?usp=drive_link&ouid=106988498767218567675&rtpof=true&sd=true", "https://docs.google.com/document/d/1xaLzPGZ3J35KbK0-JSofXiYERNfFg4Yp/edit?usp=drive_link&ouid=106988498767218567675&rtpof=true&sd=true", "https://docs.google.com/document/d/1Jk_YTMwhZEGJ9YfnWyDnyJ-4Qj9Xfr0b/edit?usp=drive_link&ouid=110681307565615179523&rtpof=true&sd=true", "https://docs.google.com/document/d/1UAN50t6J3aMCpb5UJzXbmCjhhD6ohjtY/edit?usp=drive_link&ouid=110681307565615179523&rtpof=true&sd=true"]}, {"cells": ["70", "MXH", "MXH", "English", "---", "हिन्दी", "शुद्धि पत्र"], "links": [null, null, "https://drive.google.com/file/d/1yyzxSAPDmOZUPVPyhDR7W_rsyjKXKoN_/view?usp=drive_link", "https://docs.google.com/document/d/1-ZGFBp67SBNezkvUIhmA0gs9CTMSzofe/edit?usp=drive_link&ouid=106988498767218567675&rtpof=true&sd=true", null, "https://docs.google.com/document/d/1WROmkov9JQT6tBXjtGzY7uO66fJnbI3-/edit?usp=drive_link&ouid=110681307565615179523&rtpof=true&sd=true", null]}, {"cells": ["71", "NAS", "NAS", "English", "---", "हिन्दी", "शुद्धि पत्र"], "links": [null, null, "https://drive.google.com/file/d/1kjCHHBQKLz7FK1SDPDjqfiXHZ1JCEUZd/view?usp=drive_link", "https://drive.google.com/file/d/1kndCXmyd0dTu2mu89Fb0sz2WP4G2MJXe/view?usp=drive_link", null, "https://drive.google.com/file/d/1QByMcyPzpqWsWUEi2Ml3FNOWNww3OqF0/view?usp=drive_link", null]}, {"cells": ["72", "NRM", "NRM", "English", "---", "हिन्दी", "शुद्धि पत्र"], "links": [null, null, "https://drive.google.com/file/d/1DuNIj-a8cdplEMU-bNdKMDJvtBqV9dG0/view?usp=drive_link", "https://docs.google.com/document/d/1Y40Cc1eYA966bNE2FvISbr3QdfBMJHEK/edit?usp=drive_link&ouid=106988498767218567675&rtpof=true&sd=true", null, "https://docs.google.com/document/d/1xtmbAyyyKaRAg6z6EuT2aX-jYy2V6MY5/edit?usp=drive_link&ouid=110681307565615179523&rtpof=true&sd=true", null]}, {"cells": ["73", "NRO", "NRO", "English", "---", "हिन्दी", "शुद्धि पत्र"], "links": [null, null, "https://drive.google.com/file/d/1n3dDkLeTqz02z7u-M5hxGGPY6-ZHqcgz/view?usp=drive_link", "https://docs.google.com/document/d/1whbXVMufFkkzfBxNW64hGb2HjgLeBEk5/edit?usp=drive_link&ouid=106988498767218567675&rtpof=true&sd=true", null, "https://docs.google.com/document/d/1ZyXbkY1gjR92jhuewxA2qH90Idoeosne/edit?usp=drive_link&ouid=110681307565615179523&rtpof=true&sd=true", null]}, {"cells": ["74", "NSS", "NSS", "English", "---", "हिन्दी", "शुद्धि पत्र"], "links": [null, null, "https://drive.google.com/file/d/1wxNm_rBGnPvu9Z_VRFzw9xUzNr4LDpFx/view?usp=drive_link", "https://docs.google.com/document/d/1tTBle2CVbpQA0zpJhisUaOQDcUoyZI1H/edit?usp=drive_link&ouid=106988498767218567675&rtpof=true&sd=true", "https://docs.google.com/document/d/1kgmUMtWosfLg_eCKGhTlmwA50T2Vd77F/edit?usp=drive_link&ouid=106988498767218567675&rtpof=true&sd=true", "https://docs.google.com/document/d/1LEzStEEL34_hzMZHuaa6ezRy2zeqMGcd/edit?usp=drive_link&ouid=110681307565615179523&rtpof=true&sd=true", "https://docs.google.com/document/d/1GTfwHpVikxzAk1fgR_hFROmogZAy-Ass/edit?usp=drive_link&ouid=110681307565615179523&rtpof=true&sd=true"]}, {"cells": ["75", "PAX", "PAX", "English", "---", "हिन्दी", "शुद्धि पत्र"], "links": [null, null, "https://drive.google.com/file/d/12IJpRWHwdI1k4m7Xv4_WqYJJO8uQS5HP/view?usp=drive_link", "https://drive.google.com/file/d/1uJcrNFb2XQ3V1o_8I1uLiGBUZBUJfjcl/view?usp=drive_link", null, "https://drive.google.com/file/d/1KUVpRwvzP7914Rr-OL1yALr_bi2g0oDb/view?usp=drive_link", null]}, {"cells": ["76", "PGW", "PGW", "English", "---", "हिन्दी", "शुद्धि पत्र"], "links": [null, null, "https://drive.google.com/file/d/1XX8CnwPf3dddYSONVpeecqZs84SrUY2-/view?usp=drive_link", "https://docs.google.com/document/d/1BQglxF31LU8KkyAlAXPsnnW5qipV9aW_/edit?usp=drive_link&ouid=106988498767218567675&rtpof=true&sd=true", null, "https://docs.google.com/document/d/1yh8daSQtFe7ww6Cb2Z6GNSydNLNqRI8q/edit?usp=drive_link&ouid=110681307565615179523&rtpof=true&sd=true", null]}, {"cells": ["77", "PHR", "PHR", "English", "---", "हिन्दी", "शुद्धि पत्र"], "links": [null, null, "https://drive.google.com/file/d/1fd21Y0FVBQ7wTUxbH3dtc_YGWYyCewfi/view?usp=drive_link", "https://drive.google.com/file/d/1k86oDBNmO4MgVSilsrondnwWNjoJyxCl/view?usp=drive_link", null, "https://drive.google.com/file/d/16cOkof3Z-YBugobnV4cgejp3OLl0sMLu/view?usp=drive_link", null]}, {"cells": ["78", "PHS", "PHS", "English", "---", "हिन्दी", "शुद्धि पत्र"], "links": [null, null, "https://drive.google.com/file/d/1iESaSn_S_Q01hun80WZzqKelUApvS8T3/view?usp=drive_link", "https://docs.google.com/document/d/1pRtnrqOmVmNEUJIQIPsIP0Epp1zLrR0b/edit?usp=drive_link&ouid=106988498767218567675&rtpof=true&sd=true", null, "https://docs.google.com/document/d/1W5hnRLWGuQUu5A0OA8iUVreO_lVx-UhW/edit?usp=drive_link&ouid=110681307565615179523&rtpof=true&sd=true", null]}, {"cells": ["79", "PJA", "PJA", "English", "---", "हिन्दी", "शुद्धि पत्र"], "links": [null, null, "https://drive.google.com/open?id=1JIzGk15j-ySGKNIKOYcG1Ybez95KkXWY", "https://docs.google.com/document/d/1p-B3fvMMizIuEks6JbC44-yjvoEu7kg7/edit?usp=drive_link&ouid=106988498767218567675&rtpof=true&sd=true", null, "https://docs.google.com/document/d/18YcE-wU8FnaRX-3VLLYK2Onz2-zex_hG/edit?usp=drive_link&ouid=110681307565615179523&rtpof=true&sd=true", null]}, {"cells": ["80", "RLS", "RLS", "English", "---", "हिन्दी", "शुद्धि पत्र"], "links": [null, null, "https://drive.google.com/file/d/1Gm1TRx3BuVs_uyIptFCX-gtjg_X5LSU5/view?usp=drive_link", "https://docs.google.com/document/d/1OObqQUemCr7mdHAW-Q2eJXPvVbVKGqeA/edit?usp=drive_link&ouid=106988498767218567675&rtpof=true&sd=true", null, "https://docs.google.com/document/d/1w-XSK5g_C3qR6legzwD9IQXo2f-ymef0/edit?usp=drive_link&ouid=110681307565615179523&rtpof=true&sd=true", null]}, {"cells": ["81", "SCPD", "SCPD", "English", "---", "हिन्दी", "शुद्धि पत्र"], "links": [null, null, "https://drive.google.com/file/d/1fttQMmQ5c8m5QADcNF2V-GOvr2LkeFSy/view?usp=drive_link", "https://docs.google.com/document/d/1BDvZD32L7kTrLVV_S_Nlg8si-X-W98Z5/edit?usp=drive_link&ouid=106988498767218567675&rtpof=true&sd=true", null, "https://docs.google.com/document/d/1Uyp0nuoApS4TTlEbzuuaxaV2-juX1OPD/edit?usp=drive_link&ouid=110681307565615179523&rtpof=true&sd=true", null]}, {"cells": ["82", "SNL", "SNL", "English", "---", "हिन्दी", "शुद्धि पत्र"], "links": [null, null, "https://drive.google.com/file/d/10M7IExTJWOHs4nGOP3ULVaZMOQTl6keW/view?usp=drive_link", "https://docs.google.com/document/d/1yN4iyQCjnC9gtW3ds19tnvGx0PXainoW/edit?usp=drive_link&ouid=106988498767218567675&rtpof=true&sd=true", null, "https://docs.google.com/document/d/1Z6-noUBWaMwyPaBejEO1k12wjM7IVHYh/edit?usp=drive_link&ouid=110681307565615179523&rtpof=true&sd=true", null]}, {"cells": ["83", "SQR", "SQR", "English", "---", "हिन्दी", "शुद्धि पत्र"], "links": [null, null, "https://drive.google.com/open?id=15aclTJIRYaFm3WzCwFKPhaV_YppIhxNl", "https://drive.google.com/file/d/18nZqhjyOpz1Nt88B76iUnNAM0F6Lqzus/view?usp=drive_link", null, "https://drive.google.com/file/d/1FnzynVX7M2Gq4gygcanIBv3aeyVnl5Cl/view?usp=drive_link", null]}, {"cells": ["84", "SRX", "SRX", "English", "---", "हिन्दी", "शुद्धि पत्र"], "links": [null, null, "https://drive.google.com/file/d/1c5kc5yx_80yg2uhup7Ffd4R9N98mnVvW/view?usp=drive_link", "https://docs.google.com/document/d/1vQG8hLOEeQ6ZEUSVw6Gjd_oq0_RYQH9E/edit?usp=drive_link&ouid=106988498767218567675&rtpof=true&sd=true", null, "https://docs.google.com/document/d/1Y6g7qRfZ5N02QRI635dNXnzgqXJrFXZt/edit?usp=drive_link&ouid=110681307565615179523&rtpof=true&sd=true", null]}, {"cells": ["85", "TRA", "TRA", "English", "---", "हिन्दी", "शुद्धि पत्र"], "links": [null, null, "https://drive.google.com/file/d/1y0fUPU2hxgBpQh0BjXR3MdeFKt9dkIKh/view?usp=drive_link", "https://docs.google.com/document/d/1VKSMhTsFCeSdyG57ZMPlmIP9tcEF8IPa/edit?usp=drive_link&ouid=106988498767218567675&rtpof=true&sd=true", null, "https://docs.google.com/document/d/1I2mqXAdgGY7R0_-7WjU3DF73L9x5QNot/edit?usp=drive_link&ouid=110681307565615179523&rtpof=true&sd=true", null]}, {"cells": ["86", "TTO", "TTO", "English", "---", "हिन्दी", "शुद्धि पत्र"], "links": [null, null, "https://drive.google.com/file/d/19f1p22Sp4vPM6UnCuRjii8Kn9v7oFXwW/view?usp=drive_link", "https://drive.google.com/file/d/1fkrlsFiqB-WGj7zwM-LERZd043ewUQwD/view?usp=drive_link", null, "https://drive.google.com/file/d/1owvCpDweOdvfH1woVpqVFajCBjoUajdk/view?usp=drive_link", null]}, {"cells": ["87", "TWB", "TWB", "English", "---", "हिन्दी", "शुद्धि पत्र"], "links": [null, null, "https://drive.google.com/file/d/1rRnQF_Oi3rXmCVgKr25YhUa3D4X4aRJv/view?usp=drive_link", "https://docs.google.com/document/d/1P532x2ZcNxVRDkHFgTZAHcSBsQ-xvmyF/edit?usp=drive_link&ouid=106988498767218567675&rtpof=true&sd=true", null, "https://docs.google.com/document/d/16XrTy-uz-c_82Apa1omQhylETcWChrpR/edit?usp=drive_link&ouid=110681307565615179523&rtpof=true&sd=true", null]}, {"cells": ["88", "VKA", "VKA", "English", "---", "हिन्दी", "शुद्धि पत्र"], "links": [null, null, "https://drive.google.com/file/d/1rBTmNvIK7eGEJ-OXv_eyVMKsQKa5Jwdm/view?usp=drive_link", "https://docs.google.com/document/d/1NCON2WccaJ8zs0lCabB_06WF_Ca86L3q/edit?usp=drive_link&ouid=106988498767218567675&rtpof=true&sd=true", null, "https://docs.google.com/document/d/15XUOKJHm2y-nERcb37xPcKcnxqSouv0y/edit?usp=drive_link&ouid=110681307565615179523&rtpof=true&sd=true", null]}]}], "Important letter and google lin": [{"section": null, "headers": ["Sr. No.", "Name of important link", "Google/telegram Link"], "items": [{"cells": ["1", "Monthly PME/Refresher and Safety overdue Posituion", "Link"], "links": [null, null, "https://docs.google.com/spreadsheets/d/182KJ4HGalrfh_0J9cB4rrf1eTSjd-cjtRa-EmwMDHDY/edit?usp=drive_link"]}, {"cells": ["2", "TI Daily  inspection Details", "Link"], "links": [null, null, "https://docs.google.com/spreadsheets/d/1lTVAmDsB49VHFAU0lv8xUItQQCFDM1_iTh2y3N3rktE/edit?usp=drive_link"]}, {"cells": ["3", "Report of voice recorder check of Level Crossing Gate.", "Link"], "links": [null, null, "https://docs.google.com/spreadsheets/d/1661xB_rukNoyWNXJyPWMZYG-rkSzW-HlbrpkvdWY-Zg/edit?usp=sharing"]}, {"cells": ["4", "Telegram link for Station Master Cader", "Link"], "links": [null, null, "https://t.me/+0BCGXOVIxCM0Zjg9"]}, {"cells": ["5", "Telegram link for Train Manger Cader", "Link"], "links": [null, null, "https://t.me/+dmKfKTfEtvgwMjk1"]}, {"cells": ["6", "Telegram link for Shunting/ Pointsman Cadre", "Link"], "links": [null, null, "https://t.me/+kGg325sfUFlkZjVl"]}]}, {"section": "Important latest letters", "headers": ["Sr.No.", "Important latest letters", "Date"], "items": [{"cells": ["1", "Provision and working of  Rotarty Switch at all ELB enabled Traffic  Level Crossing gates over FZR Division.(Master Correction Slip-01/2025).", "19.06.2025"], "links": [null, "https://drive.google.com/file/d/1bxb2tUqVgGQ9JviWQ5xyk91KwS7aUc44/view?usp=drive_link", null], "date": "2025-06-19"}, {"cells": ["2", "फायर ड्रिल तथा परिचालन से संबंधित अथॉरिटी व् रजिस्टर पर हस्ताक्षर के संबंध में निर्देश", "26.06.2025"], "links": [null, "https://drive.google.com/file/d/1jzEZeMzSS5EIxfUhLSceEpOXWYQM5SKC/view?usp=drive_link", null], "date": "2025-06-26"}, {"cells": ["3", "Panel / VDU counter Format Register.", "27.06.2025"], "links": [null, "https://drive.google.com/file/d/1DVhgjse7uY5anFdb_TYa5CZeI1sp2t_E/view?usp=drive_link", null], "date": "2025-06-27"}, {"cells": ["4", "Adherence to Rules under G&SR and Other Operating Manuals.", "05.07.2025"], "links": [null, "https://drive.google.com/file/d/18_jftlGo90QKE1aeN90vICNroVz4gHww/view?usp=drive_link", null], "date": "2025-07-05"}, {"cells": ["5", "Minutes of meeting of DRM VC on 23.09.2025", "26.09.2025"], "links": [null, "https://drive.google.com/file/d/1bHvpUO3Ur56XlBwy-47znAN51s0MDK7t/view?usp=drive_link", null], "date": "2025-09-26"}, {"cells": ["6", "Yard derailment of BCNHL in Warangal Yard.", "30.09.2025"], "links": [null, "https://drive.google.com/file/d/1F9G1vLXIfezkw5qB76YQsTbFj8QoFdog/view?usp=drive_link", null], "date": "2025-09-30"}, {"cells": ["7", "Removal of Opaque Materials from Gate Lodge Windows.", "30.09.2025"], "links": [null, "https://drive.google.com/file/d/15sg10PQ82f6LZYVoMyEa4ZtCfQY-VJGl/view?usp=drive_link", null], "date": "2025-09-30"}, {"cells": ["8", "Working of trains during foggy weather.", "03.11.2025"], "links": [null, "https://drive.google.com/file/d/1MGbEi5V2xsURyNY07HfdvasduXTyqgHo/view?usp=drive_link", null], "date": "2025-11-03"}, {"cells": ["9", "Immediate Compliance and Verification of Essential Safety, Operational and Documentation Protocols.", "03.11.2025"], "links": [null, "https://drive.google.com/file/d/1R67tIw_CvOVDIxQ0PGw6y1IInRJxEGFz/view?usp=drive_link", null], "date": "2025-11-03"}, {"cells": ["10", "Regarding changing of format of all TFC and ENGG interlocked and non-interlocked L-Xing Gates. (Master Correction Slip -02/2025)", "24.12.2025"], "links": [null, "https://drive.google.com/file/d/1Q6E6rY-uiEBvJD0J5taXsQunvrsdQ759/view?usp=drive_link", null], "date": "2025-12-24"}, {"cells": ["11", "Regarding procedure to be adopted during failure of power supply or failure of ELB at ELB enabled TFC and ENGG. Interlokced Level Crossing Gates. (Master Correction Slip 01/2026)", "13.01.2026"], "links": [null, "https://drive.google.com/file/d/1p6QxICn1ddpVUgp6gRtkQ6E2tDamisbs/view?usp=drive_link", null], "date": "2026-01-13"}, {"cells": ["12", "Instructions in view of averted collision at Khurja City on 29.12.2025.", "02.01.2026"], "links": [null, "https://drive.google.com/file/d/1Dj4DRAsrtq7newNqQy-nK9xMMLLBhWGS/view?usp=drive_link", null], "date": "2026-01-02"}, {"cells": ["13", "Revised authority form T/806 (Shunting order)", "24.02.2026"], "links": [null, "https://drive.google.com/file/d/1BTr2yQ3Cw4ttdDixdmGk6J6PK0LFUXMG/view?usp=drive_link", null], "date": "2026-02-24"}, {"cells": ["14", "List of alcholic Train Manager over FZR Division.", "23.03.2026"], "links": [null, "https://drive.google.com/file/d/1I-Nkd96BaC5PTtyKnERu5QkVSThQqufv/view?usp=drive_link", null], "date": "2026-03-23"}, {"cells": ["15", "Station Master Charge Diary", "13.04.2026"], "links": [null, "https://drive.google.com/file/d/1KutqE_RzYIhg8yPcEbhrgxCYnP0a1_4O/view?usp=drive_link", null], "date": "2026-04-13"}, {"cells": ["16", "Observing 30 minutes preparatory & Complementary time while taking over/handing over charge.", "17.04.2026"], "links": [null, "https://drive.google.com/file/d/1UhlZYMMPR0v9jtVUUinc3DcH1SyTM-g7/view?usp=drive_link", null], "date": "2026-04-17"}, {"cells": ["17", "Master Amendment Slip No. 02/2026 regarding the Revised List of Gate Equipment for all Engineering Level Crossing (LC) Gates", "03.06.2026"], "links": [null, "https://drive.google.com/file/d/1tI4ZHYRowehxNzVPveSHQr_MwBhMcp_f/view?usp=drive_link", null], "date": "2026-06-03"}]}]}};
+
+// ---------- live Google Sheet sources ----------
+// Add more entries here as you get published CSV links for other tabs, e.g.:
+// "Circular and Safety Bulletin": "https://docs.google.com/spreadsheets/d/e/XXXX/pub?gid=YYYY&single=true&output=csv"
+const LIVE_SOURCES = {
+  "JPO": "https://docs.google.com/spreadsheets/d/e/2PACX-1vRN18Y0xRp8jDYFOekye1E0rDz2mhTEMUOdfjiVNxKLgafie4HVA-PwvGCNIM67ZxnjMBOJGS7M4pA4/pub?gid=1179609832&single=true&output=csv",
+  "Circular and Safety Bulletin": "https://docs.google.com/spreadsheets/d/e/2PACX-1vRN18Y0xRp8jDYFOekye1E0rDz2mhTEMUOdfjiVNxKLgafie4HVA-PwvGCNIM67ZxnjMBOJGS7M4pA4/pub?gid=1324658794&single=true&output=csv",
+  "DIV and HQ Safety Drive": "https://docs.google.com/spreadsheets/d/e/2PACX-1vRN18Y0xRp8jDYFOekye1E0rDz2mhTEMUOdfjiVNxKLgafie4HVA-PwvGCNIM67ZxnjMBOJGS7M4pA4/pub?gid=533429811&single=true&output=csv",
+  "Rule Book and WTT": "https://docs.google.com/spreadsheets/d/e/2PACX-1vRN18Y0xRp8jDYFOekye1E0rDz2mhTEMUOdfjiVNxKLgafie4HVA-PwvGCNIM67ZxnjMBOJGS7M4pA4/pub?gid=469747112&single=true&output=csv",
+  "SWRD and SWR over FZR Division": "https://docs.google.com/spreadsheets/d/e/2PACX-1vRN18Y0xRp8jDYFOekye1E0rDz2mhTEMUOdfjiVNxKLgafie4HVA-PwvGCNIM67ZxnjMBOJGS7M4pA4/pub?gid=430614477&single=true&output=csv",
+  "Important letter and google lin": "https://docs.google.com/spreadsheets/d/e/2PACX-1vRN18Y0xRp8jDYFOekye1E0rDz2mhTEMUOdfjiVNxKLgafie4HVA-PwvGCNIM67ZxnjMBOJGS7M4pA4/pub?gid=333679553&single=true&output=csv"
+};
+
+const SNAPSHOT_SHEETS = JSON.parse(JSON.stringify(DATA.sheets));
+
+function parseCSV(text){
+  const rows = []; let row = []; let field = ''; let inQuotes = false;
+  for(let i=0;i<text.length;i++){
+    const c = text[i];
+    if(inQuotes){
+      if(c === '"'){ if(text[i+1] === '"'){ field += '"'; i++; } else { inQuotes = false; } }
+      else field += c;
+    } else {
+      if(c === '"') inQuotes = true;
+      else if(c === ',') { row.push(field); field=''; }
+      else if(c === '\r') { /* skip */ }
+      else if(c === '\n') { row.push(field); rows.push(row); row=[]; field=''; }
+      else field += c;
+    }
+  }
+  if(field.length || row.length){ row.push(field); rows.push(row); }
+  return rows;
+}
+
+const COMMON_COL_NAMES = ['details','station','name of important link','subject','description','particulars'];
+
+function buildBlocksFromRows(rows){
+  const HEADER_RE = /^sr\.?\s*no\.?$/i;
+  const blocks = []; let curHeader=null, curTitle=null, curRows=[], prevRow=[];
+  function flush(){ if(curHeader && curRows.length){ blocks.push({section:curTitle, headers:curHeader.slice(), rows:curRows.slice()}); } }
+  for(const raw of rows){
+    let rr = raw.slice();
+    while(rr.length && (rr[rr.length-1]||'').trim()==='') rr.pop();
+    if(rr.length===0){ prevRow=rr; continue; }
+    const first = (rr[0]||'').trim();
+    if(HEADER_RE.test(first)){
+      flush(); curHeader = rr;
+      // Section titles appear either (a) as their own short row just above the
+      // header row, or (b) embedded directly in the header row's 2nd column.
+      let prow = prevRow.slice();
+      while(prow.length && (prow[prow.length-1]||'').trim()==='') prow.pop();
+      let fromPrev = null;
+      if(prow.length===1 && prow[0] && !HEADER_RE.test((prow[0]||'').trim())) fromPrev = prow[0];
+      else if(prow.length===2 && (prow[0]||'').trim()==='' && prow[1]) fromPrev = prow[1];
+      if(fromPrev){
+        curTitle = fromPrev.trim();
+      } else if(rr.length>1 && rr[1] && !COMMON_COL_NAMES.includes(rr[1].trim().toLowerCase())){
+        curTitle = rr[1];
+      } else {
+        curTitle = null;
+      }
+      curRows = [];
+    } else {
+      if(curHeader) curRows.push(rr);
+    }
+    prevRow = rr;
+  }
+  flush();
+  return blocks;
+}
+
+function parseDateStr(s){
+  if(!s) return null;
+  const m = s.trim().match(/^(\d{1,2})[.\/](\d{1,2})[.\/](\d{4})$/);
+  if(!m) return null;
+  const dd = +m[1], mm = +m[2], yyyy = +m[3];
+  if(mm < 1 || mm > 12 || dd < 1 || dd > 31) return null;
+  return yyyy.toString().padStart(4,'0') + '-' + String(mm).padStart(2,'0') + '-' + String(dd).padStart(2,'0');
+}
+
+const LINK_COL_RE = /link|url/i;
+
+function blocksToSheetData(blocks){
+  return blocks.map(b=>{
+    let dateCol = b.headers.findIndex(h=>h.trim().toLowerCase()==='date');
+    if(dateCol < 0) dateCol = b.headers.findIndex(h=>h.trim().toLowerCase()==='from');
+    const linkColIdx = b.headers.findIndex(h=>LINK_COL_RE.test(h.trim()));
+    const items = b.rows.map(r=>{
+      const cells = b.headers.map((h,i)=> (r[i]!==undefined ? r[i] : '').trim());
+      const links = b.headers.map((h,i)=>{
+        if(i===linkColIdx){
+          const v = cells[i];
+          if(v && /^https?:\/\//i.test(v)) return v;
+        }
+        return null;
+      });
+      const item = {cells, links};
+      if(dateCol >= 0){
+        const iso = parseDateStr(cells[dateCol]);
+        if(iso) item.date = iso;
+      }
+      return item;
+    });
+    return {section: b.section, headers: b.headers, items};
+  });
+}
+
+function normalizeKeyPart(v){
+  return String(v || '').trim().toLowerCase().replace(/\s+/g, ' ');
+}
+
+function rowKey(cells){
+  return cells.map(normalizeKeyPart).join('|');
+}
+
+function subjectDateKey(cells, headers){
+  const titleIdx = headers.findIndex(h=>!/^sr/i.test(h.trim()) && !/^(date|from|to|letter no|issued by|drive no\.?)$/i.test(h.trim()));
+  const dateIdx = headers.findIndex(h=>/^(date|from)$/i.test(h.trim()));
+  const subject = cells[titleIdx >= 0 ? titleIdx : 1];
+  const date = dateIdx >= 0 ? cells[dateIdx] : '';
+  return normalizeKeyPart(subject) + '|' + normalizeKeyPart(date);
+}
+
+function copySnapshotLinks(sheetKey, liveBlocks){
+  const snapshotBlocks = SNAPSHOT_SHEETS[sheetKey] || [];
+  const exact = new Map();
+  const subjectDate = new Map();
+
+  snapshotBlocks.forEach(block=>{
+    block.items.forEach(item=>{
+      if(!item.links || !item.links.some(Boolean)) return;
+      exact.set(rowKey(item.cells), item.links);
+      subjectDate.set(subjectDateKey(item.cells, block.headers), item.links);
+    });
+  });
+
+  liveBlocks.forEach(block=>{
+    block.items.forEach(item=>{
+      if(item.links && item.links.some(Boolean)) return;
+      const savedLinks = exact.get(rowKey(item.cells)) || subjectDate.get(subjectDateKey(item.cells, block.headers));
+      if(savedLinks) item.links = savedLinks.slice(0, item.cells.length);
+    });
+  });
+  return liveBlocks;
+}
+
+async function fetchLiveSheet(url){
+  const res = await fetch(url, {cache:'no-store'});
+  if(!res.ok) throw new Error('HTTP ' + res.status);
+  const text = await res.text();
+  if(!text || !text.trim()) throw new Error('empty response');
+  const rows = parseCSV(text);
+  const blocks = buildBlocksFromRows(rows);
+  if(!blocks.length) throw new Error('no recognizable rows');
+  return blocksToSheetData(blocks);
+}
+
+let syncStatus = {}; // key -> {ok, time, error}
+
+async function syncLiveData(){
+  const entries = Object.entries(LIVE_SOURCES);
+  await Promise.all(entries.map(async ([key, url])=>{
+    try{
+      const sheetData = await fetchLiveSheet(url);
+      DATA.sheets[key] = copySnapshotLinks(key, sheetData);
+      syncStatus[key] = {ok:true, time:new Date()};
+    }catch(e){
+      syncStatus[key] = {ok:false, time:new Date(), error: e.message};
+    }
+  }));
+}
+
+function renderSyncStatusText(){
+  const el = document.getElementById('syncStatusText');
+  const parts = Object.entries(LIVE_SOURCES).map(([key])=>{
+    const s = syncStatus[key];
+    const label = (SHEET_META[key] && SHEET_META[key].label) || key;
+    if(!s) return `${label}: checking…`;
+    if(s.ok) return `${label}: synced live ${s.time.toLocaleTimeString()}`;
+    return `${label}: sync failed (${s.error}) — showing last saved snapshot`;
+  });
+  el.textContent = parts.join('  ·  ');
+}
+
+const SHEET_META = {
+  "JPO": {label:"JPOs", icon:"◈"},
+  "Circular and Safety Bulletin": {label:"Circulars & Bulletins", icon:"◉"},
+  "DIV and HQ Safety Drive": {label:"Safety Drives", icon:"◆"},
+  "Rule Book and WTT": {label:"Rule Books & WTT", icon:"▤"},
+  "SWRD and SWR over FZR Division": {label:"Station Records", icon:"▦"},
+  "Important letter and google lin": {label:"Letters & Links", icon:"✉"},
+};
+const SHEET_ORDER = ["JPO","Circular and Safety Bulletin","DIV and HQ Safety Drive","Rule Book and WTT","SWRD and SWR over FZR Division","Important letter and google lin"];
+
+function daysAgo(iso){
+  const d = new Date(iso);
+  const now = new Date();
+  return Math.round((now - d) / 86400000);
+}
+function signalClass(iso){
+  if(!iso) return 'stop';
+  const da = daysAgo(iso);
+  if(da <= 120) return 'clear';
+  if(da <= 400) return 'caution';
+  return 'stop';
+}
+function issuerBadge(v){
+  const s = (v||'').trim().toLowerCase();
+  if(s==='nrhq') return '<span class="badge nrhq">NRHQ</span>';
+  if(s==='rb') return '<span class="badge rb">RB</span>';
+  if(s==='div' || s==='div.') return '<span class="badge div">DIV</span>';
+  if(!s) return '';
+  return `<span class="badge other">${v}</span>`;
+}
+function countAll(sheetKey){
+  return DATA.sheets[sheetKey].reduce((a,b)=>a+b.items.length,0);
+}
+function escapeHtml(s){
+  return String(s).replace(/[&<>"']/g, m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+}
+function escapeAttr(s){
+  return String(s).replace(/"/g,'&quot;');
+}
+function cellHtml(headers, cells, links, i){
+  const h = headers[i].trim().toLowerCase();
+  const v = cells[i] || '';
+  const link = links ? links[i] : null;
+  if(h === 'issued by') return issuerBadge(v);
+  if(h.includes('letter no') || h.includes('drive no')){
+    const mono = `<span style="font-family:'Roboto Mono',monospace;font-size:12px;color:var(--muted);">${escapeHtml(v)}</span>`;
+    return link ? `<a class="link-cell" href="${escapeAttr(link)}" target="_blank" rel="noopener">${mono}</a>` : mono;
+  }
+  if(!v && !link) return '';
+  if(link){
+    const label = (v && v !== link) ? escapeHtml(v) : 'Open';
+    return `<a class="link-cell" href="${escapeAttr(link)}" target="_blank" rel="noopener">${label} <span class="ext-ico">↗</span></a>`;
+  }
+  return escapeHtml(v);
+}
+function makeTabBtn(id, label, count, active, badgeHtml){
+  const b = document.createElement('button');
+  b.className = 'tab-btn' + (active?' active':'');
+  b.dataset.target = id;
+  b.innerHTML = `${label}${badgeHtml||''} <span class="count">${count}</span>`;
+  return b;
+}
+
+const statCards = document.getElementById('statCards');
+const tabBar = document.getElementById('tabBar');
+const panelsWrap = document.getElementById('panels');
+const searchInput = document.getElementById('globalSearch');
+const clearBtn = document.getElementById('clearBtn');
+
+function renderDashboard(){
+  statCards.innerHTML = '';
+  tabBar.innerHTML = '';
+  panelsWrap.innerHTML = '';
+
+  // ---------- stat cards ----------
+  const statDefs = [
+    {key:"JPO", signal:"var(--steel)"},
+    {key:"Circular and Safety Bulletin", signal:"var(--caution)"},
+    {key:"DIV and HQ Safety Drive", signal:"var(--clear)"},
+    {key:"Rule Book and WTT", signal:"var(--steel)"},
+    {key:"SWRD and SWR over FZR Division", signal:"var(--muted-2)"},
+    {key:"Important letter and google lin", signal:"var(--caution)"},
+  ];
+  statDefs.forEach(sd=>{
+    const c = countAll(sd.key);
+    const div = document.createElement('div');
+    div.className = 'stat-card';
+    div.style.setProperty('--signal', sd.signal);
+    const live = LIVE_SOURCES[sd.key] ? ` <span class="live-badge ${syncStatus[sd.key] && !syncStatus[sd.key].ok ? 'fail':''}"><span class="pulse"></span>${syncStatus[sd.key] && syncStatus[sd.key].ok ? 'LIVE':'SNAPSHOT'}</span>` : '';
+    div.innerHTML = `<div class="num">${c}</div><div class="lbl">${SHEET_META[sd.key].label}${live}</div>`;
+    statCards.appendChild(div);
+  });
+
+  // ---------- gather dated items ----------
+  let allDated = [];
+  SHEET_ORDER.forEach(sk=>{
+    DATA.sheets[sk].forEach(block=>{
+      block.items.forEach(item=>{
+        if(item.date){
+          allDated.push({sheet:sk, section:block.section, cells:item.cells, links:item.links, headers:block.headers, date:item.date});
+        }
+      });
+    });
+  });
+  allDated.sort((a,b)=> b.date.localeCompare(a.date));
+
+  let issuerCounts = {};
+  DATA.sheets["JPO"].forEach(block=>{
+    const idx = block.headers.findIndex(h=>h.trim().toLowerCase()==='issued by');
+    block.items.forEach(it=>{
+      const v = (it.cells[idx]||'').trim() || '—';
+      issuerCounts[v] = (issuerCounts[v]||0)+1;
+    });
+  });
+
+  let yearCounts = {};
+  allDated.forEach(it=>{
+    const y = it.date.slice(0,4);
+    yearCounts[y] = (yearCounts[y]||0)+1;
+  });
+
+  // ---------- tabs ----------
+  tabBar.appendChild(makeTabBtn('panel-overview','Overview', allDated.length, true));
+  SHEET_ORDER.forEach((sk,i)=>{
+    const badge = LIVE_SOURCES[sk] ? ` <span class="live-badge ${syncStatus[sk] && !syncStatus[sk].ok ? 'fail':''}"><span class="pulse"></span>${syncStatus[sk] && syncStatus[sk].ok ? 'LIVE':'SNAPSHOT'}</span>` : '';
+    tabBar.appendChild(makeTabBtn('panel-'+i, SHEET_META[sk].label, countAll(sk), false, badge));
+  });
+
+  // ---------- overview panel ----------
+  const ovPanel = document.createElement('div');
+  ovPanel.className = 'panel active';
+  ovPanel.id = 'panel-overview';
+
+  const recentHtml = allDated.slice(0,14).map(it=>{
+    const titleIdx = it.headers.findIndex(h=>!/^sr/i.test(h) && h.trim().toLowerCase()!=='date' && h.trim().toLowerCase()!=='letter no' && h.trim().toLowerCase()!=='from' && h.trim().toLowerCase()!=='to' && h.trim().toLowerCase()!=='issued by' && h.trim().toLowerCase()!=='drive no.');
+    const idx = titleIdx>=0?titleIdx:1;
+    const title = it.cells[idx] || it.cells[1] || '';
+    const link = it.links ? it.links[idx] : null;
+    const cls = signalClass(it.date);
+    const titleHtml = link ? `<a class="link-cell" href="${escapeAttr(link)}" target="_blank" rel="noopener">${escapeHtml(title)} <span class="ext-ico">↗</span></a>` : escapeHtml(title);
+    return `<div class="activity-row">
+      <span class="signal-dot ${cls}" style="margin-top:5px;"></span>
+      <div class="activity-text">${titleHtml}
+        <div class="activity-meta">${SHEET_META[it.sheet].label}${it.section? ' · '+escapeHtml(it.section):''}</div>
+      </div>
+      <div class="activity-date">${it.date}</div>
+    </div>`;
+  }).join('');
+
+  const maxYearCount = Math.max(1, ...Object.values(yearCounts));
+  const yearsSorted = Object.keys(yearCounts).sort();
+  const yearBars = yearsSorted.map(y=>{
+    const c = yearCounts[y];
+    const pct = Math.round((c/maxYearCount)*100);
+    return `<div class="bar-row"><div class="bar-label">${y}</div><div class="bar-track"><div class="bar-fill" style="width:${pct}%"></div></div><div class="bar-val">${c}</div></div>`;
+  }).join('');
+
+  const maxIssuer = Math.max(1, ...Object.values(issuerCounts));
+  const issuerColors = {NRHQ:'var(--steel)', RB:'var(--caution)', 'Div.':'var(--clear)', 'Div':'var(--clear)'};
+  const issuerBars = Object.entries(issuerCounts).sort((a,b)=>b[1]-a[1]).map(([k,v])=>{
+    const pct = Math.round((v/maxIssuer)*100);
+    const color = issuerColors[k] || 'var(--muted-2)';
+    return `<div class="bar-row"><div class="bar-label">${k}</div><div class="bar-track"><div class="bar-fill" style="width:${pct}%;background:${color}"></div></div><div class="bar-val">${v}</div></div>`;
+  }).join('');
+
+  ovPanel.innerHTML = `
+    <div class="ov-grid">
+      <div class="card">
+        <h3>Recent Activity — most recently dated entries across all registers</h3>
+        ${recentHtml}
+        <div class="legend">
+          <span><span class="signal-dot clear"></span> within ~4 months</span>
+          <span><span class="signal-dot caution"></span> within ~13 months</span>
+          <span><span class="signal-dot stop"></span> older</span>
+        </div>
+      </div>
+      <div>
+        <div class="card" style="margin-bottom:18px;">
+          <h3>Dated entries by year</h3>
+          ${yearBars}
+        </div>
+        <div class="card">
+          <h3>JPOs by issuing authority</h3>
+          ${issuerBars}
+        </div>
+      </div>
+    </div>
+  `;
+  panelsWrap.appendChild(ovPanel);
+
+  // ---------- per-sheet panels ----------
+  SHEET_ORDER.forEach((sk, i)=>{
+    const panel = document.createElement('div');
+    panel.className = 'panel';
+    panel.id = 'panel-'+i;
+
+    const blocks = DATA.sheets[sk];
+    blocks.forEach((block, bi)=>{
+      if(block.section){
+        const h2 = document.createElement('h2');
+        h2.className = 'section-title';
+        h2.innerHTML = `${escapeHtml(block.section)} <span class="n">${block.items.length} entries</span>`;
+        panel.appendChild(h2);
+      }
+      if(block.items.length === 0){
+        const p = document.createElement('div');
+        p.className = 'empty-msg';
+        p.textContent = 'No entries recorded.';
+        panel.appendChild(p);
+        return;
+      }
+      const table = document.createElement('table');
+      table.dataset.sheet = sk;
+      table.dataset.block = bi;
+      const dateColIdx = block.headers.findIndex(h=>h.trim().toLowerCase()==='date');
+      const thead = document.createElement('thead');
+      thead.innerHTML = '<tr>' + block.headers.map((h,ci)=>{
+        const sortable = ci===dateColIdx;
+        return `<th ${sortable?'class="sortable" data-col="'+ci+'"':''}>${escapeHtml(h)}${sortable?'<span class="arrow">⇅</span>':''}</th>`;
+      }).join('') + '</tr>';
+      table.appendChild(thead);
+      const tbody = document.createElement('tbody');
+      block.items.forEach(item=>{
+        const tr = document.createElement('tr');
+        tr.dataset.search = item.cells.join(' ').toLowerCase();
+        if(item.date) tr.dataset.date = item.date;
+        tr.innerHTML = block.headers.map((h,ci)=>`<td>${cellHtml(block.headers, item.cells, item.links, ci)}</td>`).join('');
+        tbody.appendChild(tr);
+      });
+      table.appendChild(tbody);
+      panel.appendChild(table);
+    });
+
+    panelsWrap.appendChild(panel);
+  });
+
+  renderSyncStatusText();
+  applySearch(searchInput.value);
+}
+
+function applySearch(q){
+  q = q.trim().toLowerCase();
+  clearBtn.style.display = q ? 'inline-block' : 'none';
+  document.querySelectorAll('table').forEach(table=>{
+    table.querySelectorAll('tbody tr').forEach(tr=>{
+      const match = !q || tr.dataset.search.includes(q);
+      tr.classList.toggle('hide', !match);
+    });
+  });
+  SHEET_ORDER.forEach((sk,i)=>{
+    const panel = document.getElementById('panel-'+i);
+    if(!panel) return;
+    const visible = panel.querySelectorAll('tbody tr:not(.hide)').length;
+    const btn = tabBar.children[i+1];
+    if(btn) btn.querySelector('.count').textContent = q ? visible : countAll(sk);
+  });
+}
+
+// ---------- static event delegation (registered once) ----------
+tabBar.addEventListener('click', e=>{
+  const btn = e.target.closest('.tab-btn');
+  if(!btn) return;
+  document.querySelectorAll('.tab-btn').forEach(x=>x.classList.remove('active'));
+  document.querySelectorAll('.panel').forEach(x=>x.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById(btn.dataset.target).classList.add('active');
+});
+
+document.addEventListener('click', e=>{
+  const th = e.target.closest('th.sortable');
+  if(!th) return;
+  const table = th.closest('table');
+  const tbody = table.querySelector('tbody');
+  const rows = Array.from(tbody.querySelectorAll('tr'));
+  const asc = th.dataset.dir !== 'asc';
+  th.dataset.dir = asc ? 'asc' : 'desc';
+  rows.sort((a,b)=>{
+    const da = a.dataset.date || '';
+    const db = b.dataset.date || '';
+    return asc ? da.localeCompare(db) : db.localeCompare(da);
+  });
+  rows.forEach(r=>tbody.appendChild(r));
+  th.querySelector('.arrow').textContent = asc ? '↑' : '↓';
+});
+
+searchInput.addEventListener('input', ()=>applySearch(searchInput.value));
+clearBtn.addEventListener('click', ()=>{ searchInput.value=''; applySearch(''); searchInput.focus(); });
+
+const refreshBtn = document.getElementById('refreshBtn');
+refreshBtn.addEventListener('click', async ()=>{
+  refreshBtn.disabled = true;
+  refreshBtn.textContent = '↻ Syncing…';
+  await syncLiveData();
+  renderDashboard();
+  refreshBtn.disabled = false;
+  refreshBtn.textContent = '↻ Refresh now';
+});
+
+async function updateVisitorCount(){
+
+const url="https://script.google.com/macros/s/AKfycbx9AeLxCNWHxmjg1XDmya2MJXaZbrPIWIpG4NBr2E9ZpY7QO-FGKzcBj3VYDx6lD1ZdOg/exec";
+
+try{
+
+const res=await fetch(url);
+
+const data=await res.json();
+
+document.getElementById("visitorCount").innerText=data.total;
+
+document.getElementById("lastUpdate").innerText=
+new Date(data.updated).toLocaleTimeString();
+
+}catch(err){
+
+console.log(err);
+
+}
+
+}
+// ---------- initial load ----------
+(async function init(){
+  updateVisitorCount();
+  renderDashboard(); // render immediately with embedded snapshot so page isn't empty
+  await syncLiveData();
+  renderDashboard(); // re-render with live data where available
+})();
+</script>
+
+</body>
+</html>
+
     --line:#d5dde6;
     --line-strong:#b8c4d1;
     --ink:#172230;
